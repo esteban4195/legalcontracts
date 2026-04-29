@@ -3,6 +3,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes import health
 from app.routes import auth
 from app.routes import users
+from app.routes import cloud_providers
 
 app = FastAPI(
     title="LegalContracts API",
@@ -22,3 +23,4 @@ app.add_middleware(
 app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(users.router)
+app.include_router(cloud_providers.router)
