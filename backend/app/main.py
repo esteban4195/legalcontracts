@@ -4,6 +4,7 @@ from app.routes import health
 from app.routes import auth
 from app.routes import users
 from app.routes import cloud_providers
+from app.routes import contracts
 
 app = FastAPI(
     title="LegalContracts API",
@@ -24,3 +25,4 @@ app.include_router(health.router)
 app.include_router(auth.router)
 app.include_router(users.router)
 app.include_router(cloud_providers.router)
+app.include_router(contracts.router)
