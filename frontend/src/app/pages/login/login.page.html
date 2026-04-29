@@ -1,0 +1,46 @@
+<div class="login-bg">
+  <div class="login-card">
+    <div class="login-brand">
+      <div class="login-logo">LC</div>
+      <h1 class="login-title">LegalContracts</h1>
+      <p class="login-subtitle">Gestión Digital</p>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field-group">
+        <label class="field-label">Correo electrónico</label>
+        <input
+          class="field-input"
+          type="email"
+          formControlName="email"
+          placeholder="usuario@ejemplo.com"
+          autocomplete="email"
+        />
+        <span class="field-error" *ngIf="form.get('email')?.touched && form.get('email')?.invalid">
+          Ingresa un correo válido
+        </span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Contraseña</label>
+        <input
+          class="field-input"
+          type="password"
+          formControlName="password"
+          placeholder="••••••••"
+          autocomplete="current-password"
+        />
+        <span class="field-error" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          La contraseña es requerida
+        </span>
+      </div>
+
+      <div class="login-error" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="login-btn" type="submit" [disabled]="loading">
+        <span *ngIf="!loading">Ingresar</span>
+        <span *ngIf="loading">Ingresando...</span>
+      </button>
+    </form>
+  </div>
+</div>
