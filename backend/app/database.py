@@ -8,6 +8,8 @@ DB_CONFIG = {
     "database": os.getenv("MYSQL_DATABASE", "legalcontracts_db"),
     "user": os.getenv("MYSQL_USER", "legal_user"),
     "password": os.getenv("MYSQL_PASSWORD", "legal_password"),
+    "charset": "utf8mb4",
+    "collation": "utf8mb4_unicode_ci",
 }
 
 connection_pool = pooling.MySQLConnectionPool(

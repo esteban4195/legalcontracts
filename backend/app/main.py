@@ -2,11 +2,13 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes import health
 from app.routes import auth
+from app.routes import users
 
 app = FastAPI(
     title="LegalContracts API",
     description="Backend para gestión de contratos digitales con firma simulada",
     version="1.0.0",
+    swagger_ui_parameters={"persistAuthorization": True},
 )
 
 app.add_middleware(
@@ -19,3 +21,4 @@ app.add_middleware(
 
 app.include_router(health.router)
 app.include_router(auth.router)
+app.include_router(users.router)

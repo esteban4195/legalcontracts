@@ -68,6 +68,14 @@ legalcontracts/
    docker compose down -v
    ```
 
+## Pruebas en Swagger
+
+1. Ir a http://localhost:8000/docs
+2. Ejecutar `POST /auth/login` con las credenciales demo y copiar el `access_token`.
+3. Hacer clic en **Authorize** (candado arriba a la derecha), pegar el token y confirmar.
+4. Swagger conserva el token entre recargas — no es necesario volver a autenticarse.
+5. En entorno local el token dura **1440 minutos** (controlado por `JWT_EXPIRE_MINUTES` en `.env`).
+
 ## URLs locales
 
 | Servicio | URL |
