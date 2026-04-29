@@ -1,9 +1,204 @@
-<div class="placeholder-page">
-  <div class="placeholder-header">
-    <h1 class="placeholder-title">Proveedores Nube</h1>
+<div class="providers-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Proveedores de Nube</h1>
+      <p class="page-subtitle">Catálogo de proveedores cloud disponibles</p>
+    </div>
+    <button class="btn-primary" *ngIf="isAdmin" (click)="openCreate()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Agregar Proveedor
+    </button>
   </div>
-  <div class="placeholder-card">
-    <span class="placeholder-icon">☁</span>
-    <p class="placeholder-text">Vista en construcción</p>
+
+  <!-- Error global -->
+  <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- Stat cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Proveedores</span>
+      <span class="stat-value">{{ totalProviders }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Activos</span>
+      <span class="stat-value stat-green">{{ activeProviders }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Dentro del País</span>
+      <span class="stat-value stat-blue">{{ insideCountry }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Datos Sensibles</span>
+      <span class="stat-value stat-purple">{{ sensitiveCnt }}</span>
+    </div>
   </div>
+
+  <!-- Filtros -->
+  <div class="filters-row">
+    <div class="search-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" type="text" placeholder="Buscar proveedores..." (input)="onSearch($event)" />
+    </div>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-card">
+    <div class="loading-row" *ngIf="loading">Cargando...</div>
+
+    <table class="data-table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Región</th>
+          <th>País</th>
+          <th>Datos Sensibles</th>
+          <th>Ubicación</th>
+          <th>Estado</th>
+          <th *ngIf="isAdmin">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let p of filtered">
+          <td>
+            <div class="provider-cell">
+              <div class="provider-icon" [style.background]="providerColor(p.name)">
+                {{ providerInitial(p.name) }}
+              </div>
+              <span class="provider-name-text">{{ p.name }}</span>
+            </div>
+          </td>
+          <td class="text-muted">{{ p.region }}</td>
+          <td class="text-muted">{{ p.country }}</td>
+          <td>
+            <span class="badge" [class.badge-sensitive]="p.allows_sensitive_data" [class.badge-no-sensitive]="!p.allows_sensitive_data">
+              {{ p.allows_sensitive_data ? 'Sí' : 'No' }}
+            </span>
+          </td>
+          <td>
+            <span class="badge" [class.badge-inside]="p.location_type === 'DENTRO_PAIS'" [class.badge-outside]="p.location_type === 'FUERA_PAIS'">
+              {{ p.location_type === 'DENTRO_PAIS' ? 'Dentro del país' : 'Fuera del país' }}
+            </span>
+          </td>
+          <td>
+            <span class="status-badge" [class.status-active]="p.is_active" [class.status-inactive]="!p.is_active">
+              {{ p.is_active ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+          <td *ngIf="isAdmin">
+            <div class="actions-cell">
+              <button class="action-btn edit-btn" (click)="openEdit(p)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Editar
+              </button>
+              <button
+                class="action-btn"
+                [class.deactivate-btn]="p.is_active"
+                [class.activate-btn]="!p.is_active"
+                (click)="toggle(p)"
+              >
+                {{ p.is_active ? 'Desactivar' : 'Activar' }}
+              </button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="filtered.length === 0 && !loading">
+          <td [colSpan]="isAdmin ? 7 : 6" class="empty-row">No se encontraron proveedores</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Panel de cumplimiento -->
+  <div class="compliance-panel">
+    <div class="compliance-header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="12"/>
+        <line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span class="compliance-title">Información de Cumplimiento</span>
+    </div>
+    <p class="compliance-text">
+      Los proveedores marcados como <strong>Dentro del país</strong> cumplen con los requisitos de soberanía de datos locales.
+      Los proveedores que permiten <strong>datos sensibles</strong> han sido evaluados y certificados para el manejo de información confidencial.
+      Asegúrese de seleccionar el proveedor adecuado según la clasificación del contrato.
+    </p>
+  </div>
+
+</div>
+
+<!-- ── Modal ──────────────────────────────────────────────────────────────── -->
+
+<div class="modal-backdrop" *ngIf="showModal" (click)="closeModal()"></div>
+
+<div class="modal" *ngIf="showModal">
+  <div class="modal-header">
+    <h2 class="modal-title">{{ modalMode === 'create' ? 'Nuevo Proveedor' : 'Editar Proveedor' }}</h2>
+    <button class="modal-close" (click)="closeModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+
+  <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="modal-body">
+
+      <div class="alert-error" *ngIf="formError">{{ formError }}</div>
+
+      <div class="field-group">
+        <label class="field-label">Nombre del proveedor</label>
+        <input class="field-input" type="text" formControlName="name" placeholder="Ej. AWS, Azure, GCP" />
+        <span class="field-error" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">Requerido</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Región</label>
+        <input class="field-input" type="text" formControlName="region" placeholder="Ej. us-east-1, southamerica-east1" />
+        <span class="field-error" *ngIf="form.get('region')?.touched && form.get('region')?.invalid">Requerido</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">País</label>
+        <input class="field-input" type="text" formControlName="country" placeholder="Ej. Colombia, Estados Unidos" />
+        <span class="field-error" *ngIf="form.get('country')?.touched && form.get('country')?.invalid">Requerido</span>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Ubicación</label>
+        <select class="field-input" formControlName="location_type">
+          <option *ngFor="let opt of locationOptions" [value]="opt.value">{{ opt.label }}</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="checkbox-label">
+          <input type="checkbox" formControlName="allows_sensitive_data" class="checkbox-input" />
+          <span class="checkbox-text">Permite datos sensibles</span>
+        </label>
+      </div>
+
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="btn-secondary" (click)="closeModal()">Cancelar</button>
+      <button type="submit" class="btn-primary" [disabled]="formLoading">
+        {{ formLoading ? 'Guardando...' : 'Guardar' }}
+      </button>
+    </div>
+  </form>
 </div>
