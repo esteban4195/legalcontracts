@@ -1,0 +1,7 @@
+{
+  "name": "legalcontracts-frontend",
+  "integrations": {
+    "angular": {}
+  },
+  "type": "angular"
+}

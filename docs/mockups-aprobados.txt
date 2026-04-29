@@ -1,0 +1,25 @@
+Mockups aprobados para LegalContracts
+
+01-dashboard.png
+02-contratos.png
+03-crear-contrato.png
+04-editar-contrato.png
+05-detalle-contrato.png
+06-modal-firma.png
+07-alerta-proveedor.png
+08-blockchain.png
+09-auditoria.png
+10-usuarios.png
+11-proveedores.png
+12-configuracion.png
+
+Nota:
+El login no fue generado en Figma por falta de créditos.
+Claude debe crear el login manualmente siguiendo el mismo estilo visual:
+fondo claro, tarjeta blanca centrada, botón azul, nombre LegalContracts y subtítulo Gestión Digital.
+
+Ajustes obligatorios:
+- En el código real, los roles de participantes deben ser CLIENTE, PROVEEDOR y TESTIGO.
+- No usar ROL_FIRMANTE ni ROL_OBSERVADOR.
+- La blockchain es simulada en MySQL, no blockchain real.
+- La firma es simulada con botón de confirmación, no firma digital legal real.
