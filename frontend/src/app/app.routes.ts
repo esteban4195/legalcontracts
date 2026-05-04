@@ -26,6 +26,22 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/contracts/contracts.page').then((m) => m.ContractsPage),
       },
       {
+        path: 'contracts/new',
+        loadComponent: () => import('./pages/contracts/contract-new/contract-new.page').then(m => m.ContractNewPage),
+      },
+      {
+        path: 'contracts/:id/blockchain',
+        loadComponent: () => import('./pages/contracts/contract-blockchain/contract-blockchain.page').then(m => m.ContractBlockchainPage),
+      },
+      {
+        path: 'contracts/:id/edit',
+        loadComponent: () => import('./pages/contracts/contract-edit/contract-edit.page').then(m => m.ContractEditPage),
+      },
+      {
+        path: 'contracts/:id',
+        loadComponent: () => import('./pages/contracts/contract-detail/contract-detail.page').then(m => m.ContractDetailPage),
+      },
+      {
         path: 'blockchain',
         loadComponent: () => import('./pages/blockchain/blockchain.page').then((m) => m.BlockchainPage),
       },
