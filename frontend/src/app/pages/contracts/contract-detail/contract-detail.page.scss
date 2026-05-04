@@ -1,0 +1,553 @@
+:host {
+  display: block;
+  background: #f8fafc !important;
+  min-height: 100%;
+  color: #1e293b !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  --ion-text-color: #1e293b;
+  --ion-background-color: #f8fafc;
+  --ion-item-background: #ffffff;
+}
+
+$bg:      #f8fafc;
+$card:    #ffffff;
+$border:  #e2e8f0;
+$text:    #1e293b;
+$text-sm: #64748b;
+$blue:    #2563eb;
+$blue-dk: #1d4ed8;
+$green:   #16a34a;
+$red:     #dc2626;
+$purple:  #7c3aed;
+$radius:  12px;
+
+.detail-page {
+  padding: 32px;
+  background: $bg !important;
+  color: $text !important;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent !important;
+  color: $text-sm !important;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.4;
+  &:hover { color: $text !important; }
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $text !important;
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 13.5px;
+  color: $text-sm !important;
+  margin: 0;
+}
+
+.header-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid $border;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1.4;
+  font-family: inherit;
+  &:hover { background: #e2e8f0 !important; }
+}
+
+.btn-green {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: $green !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1.4;
+  font-family: inherit;
+  &:hover:not(:disabled) { background: #15803d !important; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-purple {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: $purple !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1.4;
+  font-family: inherit;
+  &:hover:not(:disabled) { background: #6d28d9 !important; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+// ── Alertas ───────────────────────────────────────────────────────────────────
+
+.alert-error {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: $red !important;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.alert-success {
+  background: #f0fdf4 !important;
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  color: $green !important;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.loading-wrap {
+  text-align: center;
+  padding: 48px;
+  color: $text-sm !important;
+  font-size: 14px;
+}
+
+// ── Layout ────────────────────────────────────────────────────────────────────
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 24px;
+  align-items: start;
+}
+
+.detail-main,
+.detail-side {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+// ── Cards ─────────────────────────────────────────────────────────────────────
+
+.form-card {
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 28px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.card-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text !important;
+  margin: 0 0 6px;
+}
+
+.card-subtitle {
+  font-size: 13px;
+  color: $text-sm !important;
+  margin: 0 0 16px;
+}
+
+// ── Contenido del contrato ────────────────────────────────────────────────────
+
+.contract-content {
+  font-size: 14px;
+  color: $text !important;
+  line-height: 1.75;
+  white-space: pre-wrap;
+  background: #f8fafc !important;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+// ── Tabla de participantes ────────────────────────────────────────────────────
+
+.participants-table-wrap {
+  border: 1px solid $border;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.participants-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr {
+    background: #f8fafc !important;
+    border-bottom: 1.5px solid $border;
+  }
+
+  thead th {
+    padding: 9px 14px;
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-sm !important;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    text-align: left;
+    background: #f8fafc !important;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    background: $card !important;
+    &:last-child { border-bottom: none; }
+  }
+
+  tbody td {
+    padding: 11px 14px;
+    font-size: 13.5px;
+    color: $text !important;
+    vertical-align: middle;
+  }
+}
+
+.participant-name {
+  font-weight: 500;
+  color: $text !important;
+  font-size: 13.5px;
+}
+
+.participant-email {
+  font-size: 11.5px;
+  color: $text-sm !important;
+  margin-top: 2px;
+}
+
+.text-muted { color: $text-sm !important; font-size: 13px; }
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.status-badge {
+  @extend .badge;
+}
+
+.badge-borrador   { background: #fef9c3 !important; color: #a16207 !important; }
+.badge-firmado    { background: #dcfce7 !important; color: $green   !important; }
+.badge-validado   { background: #eff6ff !important; color: $blue    !important; }
+.badge-pendiente  { background: #f1f5f9 !important; color: $text-sm !important; }
+.badge-cliente    { background: #eff6ff !important; color: $blue    !important; }
+.badge-proveedor  { background: #ede9fe !important; color: $purple  !important; }
+.badge-testigo    { background: #f0fdf4 !important; color: $green   !important; }
+.badge-si         { background: #dcfce7 !important; color: $green   !important; }
+.badge-no         { background: #fef2f2 !important; color: $red     !important; }
+.badge-genesis    { background: #eff6ff !important; color: $blue    !important; }
+.badge-firma      { background: #dcfce7 !important; color: $green   !important; }
+.badge-validacion { background: #ede9fe !important; color: $purple  !important; }
+
+// ── Blockchain ────────────────────────────────────────────────────────────────
+
+.blockchain-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.block-item {
+  background: #f8fafc !important;
+  border: 1px solid $border;
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.block-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.block-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.block-num {
+  font-size: 12px;
+  font-weight: 700;
+  color: $text-sm !important;
+}
+
+.block-date {
+  font-size: 12px;
+}
+
+.block-hash {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  font-size: 11.5px;
+  overflow: hidden;
+}
+
+.hash-label {
+  color: $text-sm !important;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.hash-value {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 11px;
+  color: #475569 !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// ── Info lateral ──────────────────────────────────────────────────────────────
+
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+.info-label {
+  color: $text-sm !important;
+  font-weight: 500;
+}
+
+.info-value {
+  color: $text !important;
+  font-weight: 600;
+}
+
+// ── Proveedor ────────────────────────────────────────────────────────────────
+
+.provider-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text !important;
+}
+
+// ── Progreso de firmas ────────────────────────────────────────────────────────
+
+.sign-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: center;
+  text-align: center;
+}
+
+.sign-counts {
+  font-size: 28px;
+  font-weight: 700;
+  color: $text !important;
+  line-height: 1;
+}
+
+.sign-done  { color: $green !important; }
+.sign-sep   { color: $text-sm !important; font-size: 22px; margin: 0 4px; }
+.sign-total { color: $text-sm !important; }
+
+.progress-bar-wrap {
+  width: 100%;
+  height: 8px;
+  background: #e2e8f0 !important;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: $green !important;
+  border-radius: 99px;
+  transition: width 0.3s ease;
+  min-width: 0;
+}
+
+.sign-label {
+  font-size: 12px;
+  color: $text-sm !important;
+}
+
+// ── Modal de firma ────────────────────────────────────────────────────────────
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 14px;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 22px 24px 0;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 18px;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  font-family: inherit;
+  &:hover { color: #1e293b; }
+}
+
+.modal-body {
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.modal-field-label {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.modal-field-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #1e293b;
+}
+
+.modal-info-box {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 13px;
+  color: #1d4ed8;
+  line-height: 1.55;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 0 24px 22px;
+}
+
+.btn-primary-blue {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: #2563eb !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1.4;
+  font-family: inherit;
+  &:hover:not(:disabled) { background: #1d4ed8 !important; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}

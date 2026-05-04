@@ -1,0 +1,109 @@
+<div class="blockchain-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="goBack()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Volver al Contrato
+      </button>
+      <div>
+        <h1 class="page-title">Historial Blockchain</h1>
+        <p class="page-subtitle" *ngIf="contract">
+          Registro inmutable de las acciones del contrato #{{ contractId }}
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error -->
+  <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- Loading -->
+  <div class="loading-wrap" *ngIf="loading">Cargando blockchain...</div>
+
+  <ng-container *ngIf="contract && !loading">
+
+    <!-- Stat cards -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-label">Total Bloques</span>
+        <span class="stat-value stat-purple">{{ blocks.length }}</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-label">Último Bloque</span>
+        <span class="stat-value stat-blue">#{{ blocks.length > 0 ? blocks[blocks.length - 1].block_number : '-' }}</span>
+      </div>
+    </div>
+
+    <!-- Chain visualization -->
+    <div class="chain-wrap" *ngIf="blocks.length > 0">
+      <div class="chain-flow">
+        <ng-container *ngFor="let b of blocks; let last = last">
+          <div class="chain-node" [ngClass]="eventClass(b.event_type)">
+            <div class="chain-node-icon">
+              <svg *ngIf="b.event_type === 'GENESIS'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 22 22 7 12 2"/></svg>
+              <svg *ngIf="b.event_type === 'FIRMA'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/></svg>
+              <svg *ngIf="b.event_type === 'VALIDACION'" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="chain-node-label">{{ eventLabel(b.event_type) }}</span>
+            <span class="chain-node-num">#{{ b.block_number }}</span>
+          </div>
+          <div class="chain-arrow" *ngIf="!last">→</div>
+        </ng-container>
+      </div>
+    </div>
+
+    <!-- Table -->
+    <div class="table-card" *ngIf="blocks.length > 0">
+      <h2 class="section-title">Cadena de Bloques</h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Bloque</th>
+            <th>Evento</th>
+            <th>Hash</th>
+            <th>Hash Anterior</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let b of blocks">
+            <td class="text-muted">#{{ b.block_number }}</td>
+            <td>
+              <span class="event-badge" [ngClass]="eventClass(b.event_type)">
+                {{ eventLabel(b.event_type) }}
+              </span>
+            </td>
+            <td>
+              <code class="hash-code" [title]="b.hash">{{ truncateHash(b.hash) }}</code>
+            </td>
+            <td>
+              <code class="hash-code" [title]="b.previous_hash ?? ''">{{ truncateHash(b.previous_hash) }}</code>
+            </td>
+            <td class="text-muted">{{ formatDate(b.created_at) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Empty -->
+    <div class="empty-wrap" *ngIf="blocks.length === 0">
+      <p>No hay bloques registrados para este contrato.</p>
+    </div>
+
+    <!-- Info footer -->
+    <div class="info-footer">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Blockchain simulada en MySQL</strong>
+        <p>Cada bloque está enlazado al anterior mediante hash SHA-256. Esta cadena es inmutable: cualquier intento de modificación invalida todos los bloques posteriores.</p>
+      </div>
+    </div>
+
+  </ng-container>
+
+</div>

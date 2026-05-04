@@ -1,9 +1,165 @@
-<div class="placeholder-page">
-  <div class="placeholder-header">
-    <h1 class="placeholder-title">Contratos</h1>
+<div class="contracts-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Contratos</h1>
+      <p class="page-subtitle">Gestiona los contratos digitales</p>
+    </div>
+    <button class="btn-primary" *ngIf="isAdmin" (click)="openCreate()">
+      <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+      </svg>
+      Nuevo Contrato
+    </button>
   </div>
-  <div class="placeholder-card">
-    <span class="placeholder-icon">📄</span>
-    <p class="placeholder-text">Vista en construcción</p>
+
+  <!-- Error global -->
+  <div class="alert-error" *ngIf="errorMsg">{{ errorMsg }}</div>
+
+  <!-- Stat cards -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <span class="stat-label">Total Contratos</span>
+      <span class="stat-value">{{ totalContracts }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Borradores</span>
+      <span class="stat-value stat-yellow">{{ draftCount }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Firmados</span>
+      <span class="stat-value stat-green">{{ signedCount }}</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-label">Validados</span>
+      <span class="stat-value stat-blue">{{ validatedCount }}</span>
+    </div>
   </div>
+
+  <!-- Filtros -->
+  <div class="filters-row">
+    <div class="search-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+           fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input class="search-input" type="text" placeholder="Buscar contratos..." (input)="onSearch($event)" />
+    </div>
+    <select class="filter-select" (change)="onStatusFilter($event)">
+      <option *ngFor="let opt of statusOptions" [value]="opt.value">{{ opt.label }}</option>
+    </select>
+  </div>
+
+  <!-- Tabla -->
+  <div class="table-card">
+    <div class="loading-row" *ngIf="loading">Cargando...</div>
+
+    <table class="data-table" *ngIf="!loading">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Título</th>
+          <th>Estado</th>
+          <th>Proveedor</th>
+          <th>Participantes</th>
+          <th>Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let c of filtered">
+
+          <!-- ID -->
+          <td class="text-muted">#{{ c.id }}</td>
+
+          <!-- Título -->
+          <td>
+            <div class="contract-title-cell">
+              <span class="contract-title-text">{{ c.title }}</span>
+              <span class="contract-title-sub">{{ c.created_by.name }}</span>
+            </div>
+          </td>
+
+          <!-- Estado -->
+          <td>
+            <span class="status-badge"
+                  [class.badge-borrador]="c.status === 'BORRADOR'"
+                  [class.badge-firmado]="c.status === 'FIRMADO'"
+                  [class.badge-validado]="c.status === 'VALIDADO'">
+              {{ statusLabel(c.status) }}
+            </span>
+          </td>
+
+          <!-- Proveedor -->
+          <td class="text-muted">{{ c.cloud_provider.name }}</td>
+
+          <!-- Participantes -->
+          <td>
+            <div class="participants-cell">
+              <span class="participants-count">{{ c.signed_participants }}/{{ c.total_participants }}</span>
+              <span class="participants-label">firmaron</span>
+            </div>
+          </td>
+
+          <!-- Fecha -->
+          <td class="text-muted">{{ formatDate(c.created_at) }}</td>
+
+          <!-- Acciones -->
+          <td>
+            <div class="actions-cell">
+
+              <!-- Ver (siempre visible) -->
+              <button class="action-btn view-btn" title="Ver contrato" (click)="viewContract(c.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                Ver
+              </button>
+
+              <!-- Editar -->
+              <button class="action-btn edit-btn" *ngIf="canEdit(c)" title="Editar contrato" (click)="editContract(c.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                </svg>
+                Editar
+              </button>
+
+              <!-- Firmar -->
+              <button class="action-btn sign-btn" *ngIf="canSign(c)" title="Firmar contrato" (click)="signContract(c.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"/>
+                </svg>
+                Firmar
+              </button>
+
+              <!-- Validar -->
+              <button class="action-btn validate-btn" *ngIf="canValidate(c)" title="Validar contrato" (click)="validateContract(c.id)">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Validar
+              </button>
+
+            </div>
+          </td>
+
+        </tr>
+
+        <!-- Estado vacío -->
+        <tr *ngIf="filtered.length === 0 && !loading">
+          <td colspan="7" class="empty-row">No se encontraron contratos</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
 </div>

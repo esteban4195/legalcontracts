@@ -1,0 +1,285 @@
+:host {
+  display: block;
+  background: #f8fafc !important;
+  min-height: 100%;
+  color: #1e293b !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+$bg:      #f8fafc;
+$card:    #ffffff;
+$border:  #e2e8f0;
+$text:    #1e293b;
+$text-sm: #64748b;
+$blue:    #2563eb;
+$green:   #16a34a;
+$purple:  #7c3aed;
+$red:     #dc2626;
+$radius:  12px;
+
+.blockchain-page {
+  padding: 32px;
+  background: $bg !important;
+  color: $text !important;
+  min-height: 100%;
+  box-sizing: border-box;
+}
+
+.page-header {
+  margin-bottom: 28px;
+}
+
+.header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent !important;
+  color: $text-sm !important;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  line-height: 1.4;
+  &:hover { color: $text !important; }
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $text !important;
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 13.5px;
+  color: $text-sm !important;
+  margin: 0;
+}
+
+.alert-error {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: $red !important;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+.loading-wrap {
+  text-align: center;
+  padding: 48px;
+  color: $text-sm !important;
+  font-size: 14px;
+}
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  max-width: 200px;
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.stat-label {
+  font-size: 11.5px;
+  color: $text-sm !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: $text !important;
+  line-height: 1;
+}
+
+.stat-purple { color: $purple !important; }
+.stat-blue   { color: $blue   !important; }
+
+// ── Chain visualization ───────────────────────────────────────────────────────
+
+.chain-wrap {
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 24px 28px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow-x: auto;
+}
+
+.chain-flow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: max-content;
+}
+
+.chain-node {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  border: 2px solid;
+  min-width: 100px;
+
+  &.event-genesis  { background: #f5f3ff !important; border-color: #c4b5fd; color: $purple !important; }
+  &.event-firma    { background: #f0fdf4 !important; border-color: #86efac; color: $green  !important; }
+  &.event-validacion { background: #eff6ff !important; border-color: #93c5fd; color: $blue !important; }
+}
+
+.chain-node-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.7);
+}
+
+.chain-node-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.chain-node-num {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+.chain-arrow {
+  font-size: 20px;
+  color: $text-sm !important;
+  flex-shrink: 0;
+}
+
+// ── Table ─────────────────────────────────────────────────────────────────────
+
+.table-card {
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  margin-bottom: 20px;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text !important;
+  margin: 0;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid $border;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  thead tr { background: #f8fafc !important; border-bottom: 1.5px solid $border; }
+  thead th {
+    padding: 10px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-sm !important;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    background: #f8fafc !important;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    background: $card !important;
+    &:last-child { border-bottom: none; }
+  }
+
+  tbody td {
+    padding: 13px 16px;
+    font-size: 13.5px;
+    color: $text !important;
+    vertical-align: middle;
+  }
+}
+
+.text-muted { color: $text-sm !important; font-size: 13px; }
+
+.event-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+
+  &.event-genesis   { background: #f5f3ff !important; color: $purple !important; }
+  &.event-firma     { background: #dcfce7 !important; color: $green  !important; }
+  &.event-validacion { background: #eff6ff !important; color: $blue  !important; }
+}
+
+.hash-code {
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-size: 12px;
+  color: #475569 !important;
+  background: #f1f5f9 !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.empty-wrap {
+  text-align: center;
+  padding: 48px;
+  color: $text-sm !important;
+  font-size: 14px;
+}
+
+// ── Info footer ───────────────────────────────────────────────────────────────
+
+.info-footer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #eff6ff !important;
+  border: 1px solid #bfdbfe;
+  border-radius: $radius;
+  padding: 16px 20px;
+  font-size: 13px;
+  color: #1e40af !important;
+  line-height: 1.55;
+
+  svg { flex-shrink: 0; margin-top: 1px; stroke: #2563eb; }
+
+  strong { display: block; font-weight: 700; margin-bottom: 4px; color: #1d4ed8 !important; }
+
+  p { margin: 0; color: #3b82f6 !important; }
+}
