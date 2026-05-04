@@ -1,0 +1,193 @@
+<div class="create-page">
+
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <button class="btn-back" (click)="cancel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+        </svg>
+        Volver al contrato
+      </button>
+      <div>
+        <h1 class="page-title">Editar Contrato</h1>
+        <p class="page-subtitle">Solo contratos en borrador pueden editarse</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button class="btn-secondary" (click)="cancel()" [disabled]="saving">Cancelar</button>
+      <button class="btn-primary" (click)="save()" [disabled]="saving || loading">
+        <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+             fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+        {{ saving ? 'Guardando...' : 'Guardar Cambios' }}
+      </button>
+    </div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-error"   *ngIf="errorMsg">{{ errorMsg }}</div>
+  <div class="alert-success" *ngIf="successMsg">{{ successMsg }}</div>
+
+  <!-- Loading inicial -->
+  <div class="loading-wrap" *ngIf="loading">Cargando contrato...</div>
+
+  <div class="form-layout" *ngIf="!loading">
+
+    <!-- Columna izquierda -->
+    <div class="form-main">
+
+      <!-- Info del contrato -->
+      <div class="form-card">
+        <h2 class="card-title">Información del Contrato</h2>
+
+        <div class="field-group">
+          <label class="field-label">Título del contrato <span class="field-required">*</span></label>
+          <input class="field-input" type="text" [(ngModel)]="title"
+                 placeholder="Ej. Contrato de prestación de servicios" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label">Contenido del contrato <span class="field-required">*</span></label>
+          <textarea class="field-input field-textarea" [(ngModel)]="content"
+                    placeholder="Escriba aquí el contenido completo del contrato..." rows="8"></textarea>
+        </div>
+
+        <div class="field-group">
+          <label class="checkbox-label">
+            <input type="checkbox" [(ngModel)]="contains_sensitive_data" class="checkbox-input" />
+            <div class="checkbox-content">
+              <span class="checkbox-title">Este contrato contiene datos sensibles</span>
+              <span class="checkbox-hint">Requiere proveedor con soporte para datos sensibles dentro del país</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Participantes -->
+      <div class="form-card">
+        <h2 class="card-title">Participantes</h2>
+        <p class="card-subtitle">Mínimo 2 participantes requeridos</p>
+
+        <div class="add-participant-row">
+          <select class="field-input participant-select" [(ngModel)]="selectedUserId"
+                  [disabled]="loadingUsers">
+            <option [ngValue]="null">{{ loadingUsers ? 'Cargando...' : 'Seleccionar usuario' }}</option>
+            <option *ngFor="let u of availableUsers" [ngValue]="u.id">{{ u.name }}</option>
+          </select>
+          <select class="field-input role-select" [(ngModel)]="selectedRole">
+            <option *ngFor="let r of roleOptions" [value]="r.value">{{ r.label }}</option>
+          </select>
+          <button class="btn-add" (click)="addParticipant()" [disabled]="!selectedUserId">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+            </svg>
+            Agregar
+          </button>
+        </div>
+
+        <div class="participants-table-wrap" *ngIf="participants.length > 0">
+          <table class="participants-table">
+            <thead>
+              <tr>
+                <th>Usuario</th>
+                <th>Rol</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let p of participants">
+                <td><div class="participant-name">{{ p.user_name }}</div></td>
+                <td>
+                  <span class="badge" [ngClass]="roleBadgeClass(p.role_in_contract)">
+                    {{ roleLabel(p.role_in_contract) }}
+                  </span>
+                </td>
+                <td>
+                  <button class="btn-remove" (click)="removeParticipant(p.user_id)">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                         fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <polyline points="3 6 5 6 21 6"/>
+                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                      <path d="M10 11v6"/><path d="M14 11v6"/>
+                    </svg>
+                    Eliminar
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="participants-empty" *ngIf="participants.length === 0">
+          <p>No hay participantes. Agregue al menos 2.</p>
+        </div>
+
+        <div class="participants-count-row" *ngIf="participants.length > 0">
+          <span [class.count-ok]="participants.length >= 2" [class.count-warn]="participants.length < 2">
+            {{ participants.length }} participante{{ participants.length !== 1 ? 's' : '' }}
+            {{ participants.length >= 2 ? '✓' : '(mínimo 2)' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Columna derecha -->
+    <div class="form-side">
+      <div class="form-card">
+        <h2 class="card-title">Proveedor de Nube</h2>
+
+        <div class="field-group">
+          <label class="field-label">Proveedor <span class="field-required">*</span></label>
+          <select class="field-input" [(ngModel)]="selectedProviderId" [disabled]="loadingProviders">
+            <option [ngValue]="null">{{ loadingProviders ? 'Cargando...' : 'Seleccionar proveedor' }}</option>
+            <option *ngFor="let p of providers" [ngValue]="p.id">{{ p.name }}</option>
+          </select>
+        </div>
+
+        <div class="provider-info-panel" *ngIf="selectedProvider">
+          <div class="provider-info-row">
+            <span class="provider-info-label">Región</span>
+            <span class="provider-info-value">{{ selectedProvider.region }}</span>
+          </div>
+          <div class="provider-info-row">
+            <span class="provider-info-label">País</span>
+            <span class="provider-info-value">{{ selectedProvider.country }}</span>
+          </div>
+          <div class="provider-info-row">
+            <span class="provider-info-label">Datos sensibles</span>
+            <span class="provider-info-value">
+              <span class="badge" [class.badge-si]="selectedProvider.allows_sensitive_data"
+                    [class.badge-no]="!selectedProvider.allows_sensitive_data">
+                {{ selectedProvider.allows_sensitive_data ? 'Sí' : 'No' }}
+              </span>
+            </span>
+          </div>
+          <div class="provider-info-row">
+            <span class="provider-info-label">Ubicación</span>
+            <span class="provider-info-value">
+              <span class="badge" [class.badge-inside]="selectedProvider.location_type === 'DENTRO_PAIS'"
+                    [class.badge-outside]="selectedProvider.location_type === 'FUERA_PAIS'">
+                {{ selectedProvider.location_type === 'DENTRO_PAIS' ? 'Dentro del país' : 'Fuera del país' }}
+              </span>
+            </span>
+          </div>
+
+          <div class="provider-warning" *ngIf="contains_sensitive_data && (!selectedProvider.allows_sensitive_data || selectedProvider.location_type !== 'DENTRO_PAIS')">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            Este proveedor puede no ser compatible con datos sensibles.
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>

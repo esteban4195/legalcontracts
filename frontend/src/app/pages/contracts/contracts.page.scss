@@ -1,0 +1,377 @@
+:host {
+  display: block;
+  background: #f8fafc !important;
+  min-height: 100%;
+  color: #1e293b !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  --ion-text-color: #1e293b;
+  --ion-background-color: #f8fafc;
+  --ion-item-background: #ffffff;
+}
+
+$bg:        #f8fafc;
+$card:      #ffffff;
+$border:    #e2e8f0;
+$text:      #1e293b;
+$text-sm:   #64748b;
+$blue:      #2563eb;
+$blue-dk:   #1d4ed8;
+$green:     #16a34a;
+$red:       #dc2626;
+$purple:    #7c3aed;
+$yellow:    #d97706;
+$radius:    12px;
+
+// ── Contenedor ────────────────────────────────────────────────────────────────
+
+.contracts-page {
+  padding: 32px;
+  min-height: 100%;
+  box-sizing: border-box;
+  background: $bg !important;
+  color: $text !important;
+}
+
+// ── Header ────────────────────────────────────────────────────────────────────
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: $text !important;
+  margin: 0 0 3px;
+  line-height: 1.2;
+}
+
+.page-subtitle {
+  font-size: 13.5px;
+  color: $text-sm !important;
+  margin: 0;
+}
+
+// ── Botones ───────────────────────────────────────────────────────────────────
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  background: $blue !important;
+  color: #fff !important;
+  border: none;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  white-space: nowrap;
+  line-height: 1.4;
+
+  &:hover:not(:disabled) { background: $blue-dk !important; }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  background: #f1f5f9 !important;
+  color: #475569 !important;
+  border: 1px solid $border;
+  border-radius: 8px;
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  line-height: 1.4;
+
+  &:hover { background: #e2e8f0 !important; }
+}
+
+// ── Alerta ────────────────────────────────────────────────────────────────────
+
+.alert-error {
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: $red !important;
+  font-size: 13px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+}
+
+// ── Stat cards ────────────────────────────────────────────────────────────────
+
+.stats-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  flex: 1;
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.stat-label {
+  font-size: 11.5px;
+  color: $text-sm !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.stat-value {
+  font-size: 32px;
+  font-weight: 700;
+  color: $text !important;
+  line-height: 1;
+}
+
+.stat-yellow { color: $yellow !important; }
+.stat-green  { color: $green  !important; }
+.stat-blue   { color: $blue   !important; }
+
+// ── Filtros ───────────────────────────────────────────────────────────────────
+
+.filters-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  align-items: center;
+}
+
+.search-wrap {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 11px;
+  color: #94a3b8;
+  stroke: #94a3b8;
+  pointer-events: none;
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
+.search-input {
+  width: 100%;
+  padding: 9px 12px 9px 36px;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: $text !important;
+  background: $card !important;
+  outline: none;
+  box-sizing: border-box;
+  transition: border-color 0.15s;
+  font-family: inherit;
+
+  &:focus { border-color: $blue; }
+  &::placeholder { color: #94a3b8; }
+}
+
+.filter-select {
+  padding: 9px 14px;
+  border: 1.5px solid $border;
+  border-radius: 8px;
+  font-size: 13.5px;
+  color: $text !important;
+  background: $card !important;
+  outline: none;
+  cursor: pointer;
+  min-width: 175px;
+  font-family: inherit;
+  transition: border-color 0.15s;
+
+  &:focus { border-color: $blue; }
+}
+
+// ── Tabla ─────────────────────────────────────────────────────────────────────
+
+.table-card {
+  background: $card !important;
+  border: 1px solid $border;
+  border-radius: $radius;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.loading-row {
+  padding: 48px;
+  text-align: center;
+  color: $text-sm !important;
+  font-size: 14px;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+
+  thead tr {
+    background: #f8fafc !important;
+    border-bottom: 1.5px solid $border;
+  }
+
+  thead th {
+    padding: 11px 16px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    color: $text-sm !important;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    white-space: nowrap;
+    background: #f8fafc !important;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+    background: $card !important;
+
+    &:last-child { border-bottom: none; }
+    &:hover { background: #f8fafc !important; }
+  }
+
+  tbody td {
+    padding: 13px 16px;
+    font-size: 13.5px;
+    color: $text !important;
+    vertical-align: middle;
+    background: transparent;
+  }
+}
+
+.text-muted { color: $text-sm !important; }
+
+// ── Celda de título del contrato ──────────────────────────────────────────────
+
+.contract-title-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.contract-title-text {
+  font-weight: 600;
+  color: $text !important;
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.contract-title-sub {
+  font-size: 12px;
+  color: $text-sm !important;
+  font-weight: 400;
+}
+
+// ── Badges de estado ──────────────────────────────────────────────────────────
+
+.status-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+
+.badge-borrador { background: #fef9c3 !important; color: #a16207 !important; }
+.badge-firmado  { background: #dcfce7 !important; color: $green   !important; }
+.badge-validado { background: #eff6ff !important; color: $blue    !important; }
+
+// ── Celda de participantes ────────────────────────────────────────────────────
+
+.participants-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.participants-count {
+  font-weight: 600;
+  color: $text !important;
+  font-size: 13.5px;
+  line-height: 1.3;
+}
+
+.participants-label {
+  font-size: 11px;
+  color: $text-sm !important;
+  font-weight: 400;
+}
+
+// ── Acciones ──────────────────────────────────────────────────────────────────
+
+.actions-cell {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: nowrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+  background: transparent !important;
+  font-family: inherit;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.view-btn {
+  color: $blue !important;
+  &:hover { background: #eff6ff !important; }
+}
+
+.edit-btn {
+  color: $blue !important;
+  &:hover { background: #eff6ff !important; }
+}
+
+.sign-btn {
+  color: $green !important;
+  &:hover { background: #f0fdf4 !important; }
+}
+
+.validate-btn {
+  color: $purple !important;
+  &:hover { background: #f5f3ff !important; }
+}
+
+.empty-row {
+  text-align: center;
+  color: $text-sm !important;
+  padding: 48px 16px !important;
+  font-size: 14px;
+}
