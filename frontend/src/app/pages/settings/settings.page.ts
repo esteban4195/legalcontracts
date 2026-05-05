@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-settings',
   templateUrl: 'settings.page.html',
-  styleUrls: ['../placeholder.page.scss'],
+  styleUrls: ['settings.page.scss'],
   standalone: true,
   imports: [CommonModule],
 })
