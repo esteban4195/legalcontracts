@@ -5,7 +5,7 @@ from jose import JWTError, jwt
 
 SECRET_KEY = os.getenv("JWT_SECRET", "change_this_secret_key")
 ALGORITHM = os.getenv("JWT_ALGORITHM", "HS256")
-EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", 120))
+EXPIRE_MINUTES = int(os.getenv("JWT_EXPIRE_MINUTES", 1440))
 
 
 def create_access_token(payload: dict) -> str:

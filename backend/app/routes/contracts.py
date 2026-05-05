@@ -76,7 +76,7 @@ def get_contract(
         "Crea un nuevo contrato en estado BORRADOR. "
         "Requiere al menos 2 participantes distintos. "
         "Valida que el proveedor de nube sea compatible con los datos del contrato. "
-        "AUDITOR no puede crear contratos."
+        "Solo ADMIN puede crear contratos."
     ),
 )
 def create_contract(

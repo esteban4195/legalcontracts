@@ -326,10 +326,10 @@ def create_contract(data: ContractCreate, current_user: dict) -> dict:
     role = current_user["system_role"]
     user_id = current_user["id"]
 
-    if role == "AUDITOR":
+    if role != "ADMIN":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="AUDITOR no puede crear contratos",
+            detail="Solo ADMIN puede crear contratos",
         )
 
     # Validate cloud provider
