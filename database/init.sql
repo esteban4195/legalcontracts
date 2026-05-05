@@ -94,8 +94,8 @@ CREATE TABLE IF NOT EXISTS contract_participants (
 
 -- -------------------------------------------------------
 -- audit_logs
--- Registro inmutable de acciones del sistema
--- user_id y contract_id son nullable (ej: login fallido sin contrato)
+-- Registro inmutable de acciones funcionales del sistema
+-- Solo registra eventos de contratos y validación de proveedores
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS audit_logs (
   id           INT AUTO_INCREMENT PRIMARY KEY,
@@ -108,9 +108,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     'EDICION_CONTRATO',
     'FIRMA',
     'VALIDACION',
-    'ERROR_VALIDACION_PROVEEDOR',
-    'LOGIN',
-    'LOGOUT'
+    'ERROR_VALIDACION_PROVEEDOR'
   ) NOT NULL,
   description  TEXT          NOT NULL,
   created_at   TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
