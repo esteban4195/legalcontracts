@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, tap } from 'rxjs';
+import { environment } from '../../environments/environment';
 
-const API = 'http://localhost:8000';
+const API = environment.apiUrl;
 const TOKEN_KEY = 'lc_token';
 const USER_KEY = 'lc_user';
 

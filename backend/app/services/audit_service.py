@@ -3,14 +3,9 @@ from app.database import get_connection
 
 logger = logging.getLogger(__name__)
 
-# Actions that must NOT be logged (per project spec)
-_EXCLUDED_ACTIONS = {"LOGIN", "LOGOUT"}
-
 
 def create_log(user_id: int, contract_id, action_type: str, description: str = "") -> None:
-    """Insert an audit log entry. LOGIN and LOGOUT are silently ignored."""
-    if action_type in _EXCLUDED_ACTIONS:
-        return
+    """Insert an audit log entry for a contract or provider validation action."""
     try:
         conn = get_connection()
         cursor = conn.cursor()
