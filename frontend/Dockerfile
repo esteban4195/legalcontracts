@@ -13,4 +13,4 @@ COPY . .
 
 EXPOSE 8100
 
-CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "8100"]
+CMD ["ng", "serve", "--host", "0.0.0.0", "--port", "8100", "--poll", "2000"]
