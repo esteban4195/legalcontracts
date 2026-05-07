@@ -1,6 +1,6 @@
 <div class="audit-page">
-  <div class="header-section">
-    <h1>Auditoría y Logs</h1>
+  <div class=".page-header">
+    <h1 class="page-title">Auditoría y Logs</h1>
     <p>Registro completo de actividades del sistema</p>
   </div>
 
@@ -10,28 +10,30 @@
   </div>
 
   <ng-container *ngIf="!isForbidden">
-    <div class="stats-grid">
+    <div class="stats-row">
       <div class="stat-card">
-        <span>Total de Eventos</span>
+        <span class="stat-label">Total de Eventos</span>
         <h2>{{ logs.length }}</h2>
       </div>
       <div class="stat-card">
-        <span>Firmas Registradas</span>
-        <h2 class="green">186</h2>
+        <span class="stat-label">Firmas Registradas</span>
+        <h2 class="stat-green">186</h2>
       </div>
       <div class="stat-card">
-        <span>Validaciones</span>
-        <h2 class="blue">156</h2>
+        <span class="stat-label">Validaciones</span>
+        <h2 class="stat-blue">156</h2>
       </div>
     </div>
 
     <div class="filters-container">
-      <input
-        type="text"
-        placeholder="Buscar usuario..."
-        [(ngModel)]="selectedUser"
-        (input)="applyFilters()"
-      />
+      <div class="search-wrap">
+        <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="8" />
+          <line x1="21" y1="21" x2="16.65" y2="16.65" />
+        </svg>
+        <input class="search-input" type="text" placeholder="Buscar usuario..." [(ngModel)]="selectedUser" (input)="applyFilters()" />
+      </div>
       <select [(ngModel)]="selectedAction" (change)="applyFilters()">
         <option value="">Todas las acciones</option>
         <option value="CREACION_CONTRATO">CREACION_CONTRATO</option>
