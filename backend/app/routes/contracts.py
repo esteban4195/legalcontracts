@@ -3,7 +3,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Query, status
 
 from app.auth.dependencies import get_current_user
-from app.schemas.contract_schema import ContractCreate, ContractUpdate
+from app.schemas.contract_schema import ContractCreate, ContractUpdate, SignRequest
 from app.services import contract_service
 
 router = APIRouter(prefix="/contracts", tags=["Contracts"])
@@ -119,7 +119,7 @@ def update_contract(
     status_code=status.HTTP_200_OK,
     summary="Firmar contrato",
     description=(
-        "El usuario autenticado firma el contrato como participante. "
+        "El usuario autenticado firma el contrato como participante, guardando su firma. "
         "Solo contratos en estado BORRADOR pueden ser firmados. "
         "Cuando todos los participantes han firmado, el contrato pasa a FIRMADO. "
         "AUDITOR no puede firmar contratos."
@@ -127,9 +127,28 @@ def update_contract(
 )
 def sign_contract(
     contract_id: int,
+    body: SignRequest,
     current_user: dict = Depends(get_current_user),
 ):
-    return contract_service.sign_contract(contract_id, current_user)
+    return contract_service.sign_contract(contract_id, body, current_user)
+
+
+@router.put(
+    "/{contract_id}/sign",
+    status_code=status.HTTP_200_OK,
+    summary="Actualizar firma",
+    description=(
+        "Reemplaza la imagen de firma del usuario en un contrato ya firmado. "
+        "Solo permitido mientras el contrato NO esté en estado VALIDADO. "
+        "AUDITOR no puede modificar firmas."
+    ),
+)
+def update_signature(
+    contract_id: int,
+    body: SignRequest,
+    current_user: dict = Depends(get_current_user),
+):
+    return contract_service.update_signature(contract_id, body, current_user)
 
 
 # ---------------------------------------------------------------------------
