@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -12,17 +12,30 @@ import { ContractsService, ContractDetail } from '../../../services/contracts.se
   styleUrls: ['contract-detail.page.scss'],
 })
 export class ContractDetailPage implements OnInit {
+  @ViewChild('signatureCanvas') canvasRef!: ElementRef<HTMLCanvasElement>;
+
   contract: ContractDetail | null = null;
   loading = false;
   actionLoading = false;
   errorMsg = '';
   successMsg = '';
 
-  showSignModal = false;
-  modalSignError = '';
-
+  // Validate modal
   showValidateModal = false;
   modalValidateError = '';
+
+  // Sign modal
+  showSignModal = false;
+  modalSignError = '';
+  signMode: 'draw' | 'upload' = 'draw';
+  signaturePreview: string | null = null;
+  isEditSignature = false;
+
+  // Canvas drawing state
+  private drawing = false;
+  private ctx: CanvasRenderingContext2D | null = null;
+  private lastX = 0;
+  private lastY = 0;
 
   private contractId!: number;
 
@@ -68,6 +81,15 @@ export class ContractDetailPage implements OnInit {
     return !!myPart && !myPart.has_signed;
   }
 
+  get canEditSignature(): boolean {
+    if (!this.contract || this.isAuditor) return false;
+    if (this.contract.status === 'VALIDADO') return false;
+    const me = this.currentUser;
+    if (!me) return false;
+    const myPart = this.contract.participants.find(p => p.user_id === me.id);
+    return !!myPart && myPart.has_signed;
+  }
+
   get canValidate(): boolean {
     if (!this.contract || this.isAuditor) return false;
     if (this.contract.status !== 'FIRMADO') return false;
@@ -78,31 +100,195 @@ export class ContractDetailPage implements OnInit {
     return new Date().toLocaleString('es-CO');
   }
 
-  openSignModal(): void {
+  get lastBlock() {
+    const blocks = this.contract?.blockchain_blocks;
+    if (!blocks?.length) return null;
+    return blocks[blocks.length - 1];
+  }
+
+  get myParticipant() {
+    const me = this.currentUser;
+    if (!me || !this.contract) return null;
+    return this.contract.participants.find(p => p.user_id === me.id) ?? null;
+  }
+
+  // ── Sign modal ────────────────────────────────────────────────────────────
+
+  openSignModal(isEdit = false): void {
+    this.isEditSignature = isEdit;
     this.showSignModal = true;
     this.modalSignError = '';
+    this.signMode = 'draw';
+    this.signaturePreview = null;
+
+    // If editing, pre-load existing signature
+    if (isEdit && this.myParticipant?.signature_image_base64) {
+      this.signaturePreview = this.myParticipant.signature_image_base64;
+    }
+
+    // Initialize canvas after view updates
+    setTimeout(() => this.initCanvas(), 50);
   }
 
   closeSignModal(): void {
     this.showSignModal = false;
+    this.signaturePreview = null;
+    this.ctx = null;
   }
 
+  setSignMode(mode: 'draw' | 'upload'): void {
+    this.signMode = mode;
+    if (mode === 'draw') {
+      this.signaturePreview = null;
+      setTimeout(() => this.initCanvas(), 50);
+    }
+  }
+
+  // ── Canvas ────────────────────────────────────────────────────────────────
+
+  private initCanvas(): void {
+    if (!this.canvasRef) return;
+    const canvas = this.canvasRef.nativeElement;
+    this.ctx = canvas.getContext('2d');
+    if (!this.ctx) return;
+    this.ctx.strokeStyle = '#1e293b';
+    this.ctx.lineWidth = 2.5;
+    this.ctx.lineCap = 'round';
+    this.ctx.lineJoin = 'round';
+    this.clearCanvas();
+  }
+
+  clearCanvas(): void {
+    if (!this.ctx || !this.canvasRef) return;
+    const canvas = this.canvasRef.nativeElement;
+    this.ctx.fillStyle = '#ffffff';
+    this.ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
+  clearSignature(): void {
+    if (this.signMode === 'draw') {
+      this.clearCanvas();
+    } else {
+      this.signaturePreview = null;
+    }
+  }
+
+  onCanvasMouseDown(e: MouseEvent): void {
+    if (!this.ctx || !this.canvasRef) return;
+    this.drawing = true;
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    this.lastX = e.clientX - rect.left;
+    this.lastY = e.clientY - rect.top;
+  }
+
+  onCanvasMouseMove(e: MouseEvent): void {
+    if (!this.drawing || !this.ctx || !this.canvasRef) return;
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.lastX, this.lastY);
+    this.ctx.lineTo(x, y);
+    this.ctx.stroke();
+    this.lastX = x;
+    this.lastY = y;
+  }
+
+  onCanvasMouseUp(): void { this.drawing = false; }
+  onCanvasMouseLeave(): void { this.drawing = false; }
+
+  onCanvasTouchStart(e: TouchEvent): void {
+    e.preventDefault();
+    if (!this.ctx || !this.canvasRef) return;
+    this.drawing = true;
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    const touch = e.touches[0];
+    this.lastX = touch.clientX - rect.left;
+    this.lastY = touch.clientY - rect.top;
+  }
+
+  onCanvasTouchMove(e: TouchEvent): void {
+    e.preventDefault();
+    if (!this.drawing || !this.ctx || !this.canvasRef) return;
+    const rect = this.canvasRef.nativeElement.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    this.ctx.beginPath();
+    this.ctx.moveTo(this.lastX, this.lastY);
+    this.ctx.lineTo(x, y);
+    this.ctx.stroke();
+    this.lastX = x;
+    this.lastY = y;
+  }
+
+  onCanvasTouchEnd(): void { this.drawing = false; }
+
+  // ── Upload ────────────────────────────────────────────────────────────────
+
+  onFileSelected(e: Event): void {
+    const input = e.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const allowed = ['image/png', 'image/jpeg', 'image/jpg'];
+    if (!allowed.includes(file.type)) {
+      this.modalSignError = 'Solo se permiten imágenes PNG o JPG';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => { this.signaturePreview = reader.result as string; };
+    reader.readAsDataURL(file);
+  }
+
+  // ── Confirm sign / update ─────────────────────────────────────────────────
+
   confirmSign(): void {
+    const base64 = this.getSignatureBase64();
+    if (!base64) {
+      this.modalSignError = 'Debes dibujar o subir una firma antes de confirmar';
+      return;
+    }
+
     this.actionLoading = true;
     this.modalSignError = '';
-    this.svc.sign(this.contractId).subscribe({
+
+    const call = this.isEditSignature
+      ? this.svc.updateSignature(this.contractId, base64)
+      : this.svc.sign(this.contractId, base64);
+
+    call.subscribe({
       next: (data) => {
         this.contract = data;
         this.actionLoading = false;
-        this.successMsg = 'Contrato firmado correctamente';
+        this.successMsg = this.isEditSignature
+          ? 'Firma actualizada correctamente'
+          : 'Contrato firmado correctamente';
         this.closeSignModal();
       },
       error: (err) => {
         this.actionLoading = false;
-        this.modalSignError = err.error?.detail || 'Error al firmar el contrato';
+        this.modalSignError = err.error?.detail || 'Error al procesar la firma';
       },
     });
   }
+
+  private getSignatureBase64(): string | null {
+    if (this.signMode === 'upload') {
+      return this.signaturePreview || null;
+    }
+    // Draw mode: export canvas
+    if (!this.canvasRef) return null;
+    const canvas = this.canvasRef.nativeElement;
+    // Check if canvas has any drawing (not all white)
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return null;
+    const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+    const hasDrawing = Array.from(data).some((v, i) => i % 4 !== 3 && v < 250);
+    if (!hasDrawing) return null;
+    return canvas.toDataURL('image/png');
+  }
+
+  // ── Validate modal ────────────────────────────────────────────────────────
 
   openValidateModal(): void {
     this.showValidateModal = true;
@@ -130,9 +316,13 @@ export class ContractDetailPage implements OnInit {
     });
   }
 
+  // ── Navigation ────────────────────────────────────────────────────────────
+
   goEdit(): void { this.router.navigate(['/contracts', this.contractId, 'edit']); }
   goBlockchain(): void { this.router.navigate(['/contracts', this.contractId, 'blockchain']); }
   goBack(): void { this.router.navigate(['/contracts']); }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
 
   formatDate(dateStr: string): string {
     if (!dateStr) return '-';

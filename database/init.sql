@@ -71,14 +71,16 @@ CREATE TABLE IF NOT EXISTS contracts (
 -- Un usuario no puede repetirse en el mismo contrato (UNIQUE)
 -- -------------------------------------------------------
 CREATE TABLE IF NOT EXISTS contract_participants (
-  id                INT AUTO_INCREMENT PRIMARY KEY,
-  contract_id       INT           NOT NULL,
-  user_id           INT           NOT NULL,
-  role_in_contract  ENUM('CLIENTE','PROVEEDOR','TESTIGO') NOT NULL,
-  has_signed        BOOLEAN       NOT NULL DEFAULT FALSE,
-  signed_at         TIMESTAMP     NULL,
-  created_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  updated_at        TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  id                        INT AUTO_INCREMENT PRIMARY KEY,
+  contract_id               INT           NOT NULL,
+  user_id                   INT           NOT NULL,
+  role_in_contract          ENUM('CLIENTE','PROVEEDOR','TESTIGO') NOT NULL,
+  has_signed                BOOLEAN       NOT NULL DEFAULT FALSE,
+  signed_at                 TIMESTAMP     NULL,
+  signature_image_base64    LONGTEXT      NULL,
+  signature_updated_at      TIMESTAMP     NULL,
+  created_at                TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at                TIMESTAMP     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
   CONSTRAINT fk_participants_contract
     FOREIGN KEY (contract_id) REFERENCES contracts(id),
@@ -107,6 +109,7 @@ CREATE TABLE IF NOT EXISTS audit_logs (
     'ELIMINAR_PARTICIPANTE',
     'EDICION_CONTRATO',
     'FIRMA',
+    'ACTUALIZACION_FIRMA',
     'VALIDACION',
     'ERROR_VALIDACION_PROVEEDOR'
   ) NOT NULL,
