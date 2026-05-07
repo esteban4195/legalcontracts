@@ -1,10 +1,91 @@
-<div class="placeholder-page">
-  <div class="placeholder-header">
-    <h1 class="placeholder-title">Auditoría</h1>
+<div class="audit-page">
+  <div class="header-section">
+    <h1>Auditoría y Logs</h1>
+    <p>Registro completo de actividades del sistema</p>
   </div>
-  <div class="placeholder-card">
-    <span class="placeholder-icon">🔍</span>
-    <p class="placeholder-text">Vista en construcción</p>
-    <p class="placeholder-text">texto</p>
+
+  <div *ngIf="isForbidden" class="forbidden-card">
+    <h2>403</h2>
+    <p>No tienes permisos para acceder a esta vista.</p>
   </div>
+
+  <ng-container *ngIf="!isForbidden">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span>Total de Eventos</span>
+        <h2>{{ logs.length }}</h2>
+      </div>
+      <div class="stat-card">
+        <span>Firmas Registradas</span>
+        <h2 class="green">186</h2>
+      </div>
+      <div class="stat-card">
+        <span>Validaciones</span>
+        <h2 class="blue">156</h2>
+      </div>
+    </div>
+
+    <div class="filters-container">
+      <input
+        type="text"
+        placeholder="Buscar usuario..."
+        [(ngModel)]="selectedUser"
+        (input)="applyFilters()"
+      />
+      <select [(ngModel)]="selectedAction" (change)="applyFilters()">
+        <option value="">Todas las acciones</option>
+        <option value="CREACION_CONTRATO">CREACION_CONTRATO</option>
+        <option value="AGREGAR_PARTICIPANTE">AGREGAR_PARTICIPANTE</option>
+        <option value="ELIMINAR_PARTICIPANTE">ELIMINAR_PARTICIPANTE</option>
+        <option value="EDICION_CONTRATO">EDICION_CONTRATO</option>
+        <option value="FIRMA">FIRMA</option>
+        <option value="VALIDACION">VALIDACION</option>
+        <option value="ERROR_VALIDACION_PROVEEDOR">
+          ERROR_VALIDACION_PROVEEDOR
+        </option>
+        <option value="LOGIN">LOGIN</option>
+        <option value="LOGOUT">LOGOUT</option>
+      </select>
+    </div>
+
+    <div *ngIf="filteredLogs.length === 0" class="empty-state">
+      <div class="empty-icon">📄</div>
+
+      <h3>No hay registros</h3>
+
+      <p>No existen logs para mostrar.</p>
+    </div>
+
+    <div *ngIf="filteredLogs.length > 0" class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha y Hora</th>
+            <th>Acción</th>
+            <th>Contrato</th>
+            <th>Usuario</th>
+            <th>Detalles</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let log of filteredLogs">
+            <td>{{ log.fecha }}</td>
+
+            <td>
+              <span class="badge" [ngClass]="getActionClass(log.accion)">
+                {{ log.accion }}
+              </span>
+            </td>
+
+            <td>{{ log.contrato }}</td>
+
+            <td>{{ log.usuario }}</td>
+
+            <td>{{ log.detalles }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 </div>
