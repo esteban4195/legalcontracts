@@ -6,7 +6,7 @@ from typing import Optional
 from fastapi import HTTPException, status
 
 from app.database import get_connection
-from app.schemas.contract_schema import ContractCreate, ContractUpdate
+from app.schemas.contract_schema import ContractCreate, ContractUpdate, SignRequest
 from app.services import audit_service, blockchain_service
 from app.services.cloud_provider_validation_service import validate_provider_for_contract
 
@@ -69,6 +69,8 @@ def _fetch_contract_detail(contract_id: int, conn) -> Optional[dict]:
                 cp.role_in_contract,
                 cp.has_signed,
                 cp.signed_at,
+                cp.signature_image_base64,
+                cp.signature_updated_at,
                 u.name  AS user_name,
                 u.email AS user_email,
                 u.system_role AS user_system_role
@@ -139,6 +141,8 @@ def _fetch_contract_detail(contract_id: int, conn) -> Optional[dict]:
                 "role_in_contract": p["role_in_contract"],
                 "has_signed": bool(p["has_signed"]),
                 "signed_at": p["signed_at"],
+                "signature_image_base64": p["signature_image_base64"],
+                "signature_updated_at": p["signature_updated_at"],
             }
             for p in participants
         ],
@@ -625,9 +629,9 @@ def update_contract(contract_id: int, data: ContractUpdate, current_user: dict) 
     return updated_contract
 
 
-def sign_contract(contract_id: int, current_user: dict) -> dict:
+def sign_contract(contract_id: int, data: SignRequest, current_user: dict) -> dict:
     """
-    Sign a contract as participant.
+    Sign a contract as participant, saving the signature image.
     AUDITOR: 403.
     User must be participant.
     Status must be BORRADOR.
@@ -689,14 +693,14 @@ def sign_contract(contract_id: int, current_user: dict) -> dict:
         conn.start_transaction()
         cursor = conn.cursor(dictionary=True)
         try:
-            # Mark participant as signed
             cursor.execute(
                 """
                 UPDATE contract_participants
-                SET has_signed = TRUE, signed_at = %s
+                SET has_signed = TRUE, signed_at = %s,
+                    signature_image_base64 = %s, signature_updated_at = %s
                 WHERE contract_id = %s AND user_id = %s
                 """,
-                (now_str, contract_id, user_id),
+                (now_str, data.signature_image_base64, now_str, contract_id, user_id),
             )
 
             # Check if all participants have now signed
@@ -740,7 +744,83 @@ def sign_contract(contract_id: int, current_user: dict) -> dict:
     sign_data = json.dumps({"user_id": user_id, "signed_at": now_str})
     blockchain_service.create_block(contract_id, "FIRMA", sign_data, user_id)
 
-    # Fetch after blockchain block is written so the response includes it
+    return _fetch_contract_detail_fresh(contract_id)
+
+
+def update_signature(contract_id: int, data: SignRequest, current_user: dict) -> dict:
+    """
+    Replace the signature image for a participant who has already signed.
+    Only allowed while the contract is not VALIDADO.
+    AUDITOR: 403.
+    User must be a participant who has already signed.
+    """
+    role = current_user["system_role"]
+    user_id = current_user["id"]
+
+    if role == "AUDITOR":
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="AUDITOR no puede modificar firmas",
+        )
+
+    conn = get_connection()
+    try:
+        contract = _require_contract_exists(contract_id, conn)
+
+        if contract["status"] == "VALIDADO":
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="No se puede modificar la firma de un contrato validado",
+            )
+
+        participant = next(
+            (p for p in contract["participants"] if p["user_id"] == user_id), None
+        )
+        if participant is None:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="No es participante de este contrato",
+            )
+
+        if not participant["has_signed"]:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Aún no ha firmado este contrato",
+            )
+
+        now_str = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+
+        conn.commit()
+        conn.start_transaction()
+        cursor = conn.cursor(dictionary=True)
+        try:
+            cursor.execute(
+                """
+                UPDATE contract_participants
+                SET signature_image_base64 = %s, signature_updated_at = %s
+                WHERE contract_id = %s AND user_id = %s
+                """,
+                (data.signature_image_base64, now_str, contract_id, user_id),
+            )
+            conn.commit()
+            cursor.close()
+
+        except HTTPException:
+            conn.rollback()
+            raise
+        except Exception as exc:
+            conn.rollback()
+            logger.error("update_signature transaction error: %s", exc)
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Error al actualizar la firma",
+            )
+
+    finally:
+        conn.close()
+
+    audit_service.create_log(user_id, contract_id, "ACTUALIZACION_FIRMA", str(user_id))
+
     return _fetch_contract_detail_fresh(contract_id)
 
 
