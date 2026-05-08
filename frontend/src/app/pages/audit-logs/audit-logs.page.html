@@ -1,7 +1,9 @@
 <div class="audit-page">
-  <div class=".page-header">
-    <h1 class="page-title">Auditoría y Logs</h1>
-    <p>Registro completo de actividades del sistema</p>
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Auditoría y Logs</h1>
+      <p class="page-subtitle">Registro completo de actividades del sistema</p>
+    </div>
   </div>
 
   <div *ngIf="isForbidden" class="forbidden-card">
@@ -13,15 +15,15 @@
     <div class="stats-row">
       <div class="stat-card">
         <span class="stat-label">Total de Eventos</span>
-        <h2>{{ logs.length }}</h2>
+        <h2 class="stat-value">{{ totalEventos }}</h2>
       </div>
       <div class="stat-card">
         <span class="stat-label">Firmas Registradas</span>
-        <h2 class="stat-green">186</h2>
+        <h2 class="stat-green">{{ totalFirmas }}</h2>
       </div>
       <div class="stat-card">
         <span class="stat-label">Validaciones</span>
-        <h2 class="stat-blue">156</h2>
+        <h2 class="stat-blue">{{ totalValidaciones }}</h2>
       </div>
     </div>
 
@@ -32,7 +34,8 @@
           <circle cx="11" cy="11" r="8" />
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
-        <input class="search-input" type="text" placeholder="Buscar usuario..." [(ngModel)]="selectedUser" (input)="applyFilters()" />
+        <input class="search-input" type="text" placeholder="Buscar usuario..." [(ngModel)]="selectedUser"
+          (input)="applyFilters()" />
       </div>
       <select [(ngModel)]="selectedAction" (change)="applyFilters()">
         <option value="">Todas las acciones</option>

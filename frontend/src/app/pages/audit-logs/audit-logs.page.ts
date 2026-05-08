@@ -21,6 +21,18 @@ export class AuditLogsPage implements OnInit {
   isForbidden = false;
   isLoading = false;
 
+  get totalEventos(): number {
+    return this.logs.length;
+  }
+
+  get totalFirmas(): number {
+    return this.logs.filter((log) => log.accion === "FIRMA").length;
+  }
+
+  get totalValidaciones(): number {
+    return this.logs.filter((log) => log.accion === "VALIDACION").length;
+  }
+
   ngOnInit(): void {
     this.logs = [
       {
@@ -57,54 +69,50 @@ export class AuditLogsPage implements OnInit {
   }
 
   applyFilters(): void {
+    this.filteredLogs = this.logs.filter((log) => {
+      const matchAction =
+        !this.selectedAction ||
+        log.accion.toLowerCase().includes(this.selectedAction.toLowerCase());
 
-  this.filteredLogs = this.logs.filter(log => {
+      const matchUser =
+        !this.selectedUser ||
+        log.usuario.toLowerCase().includes(this.selectedUser.toLowerCase());
 
-    const matchAction =
-      !this.selectedAction ||
-      log.accion.toLowerCase().includes(this.selectedAction.toLowerCase());
-
-    const matchUser =
-      !this.selectedUser ||
-      log.usuario.toLowerCase().includes(this.selectedUser.toLowerCase());
-
-    return matchAction && matchUser;
-  });
-}
+      return matchAction && matchUser;
+    });
+  }
 
   getActionClass(action: string): string {
+    switch (action) {
+      case "LOGIN":
+        return "badge-login";
 
-  switch (action) {
+      case "LOGOUT":
+        return "badge-logout";
 
-    case 'LOGIN':
-      return 'badge-login';
+      case "FIRMA":
+        return "badge-sign";
 
-    case 'LOGOUT':
-      return 'badge-logout';
+      case "VALIDACION":
+        return "badge-validation";
 
-    case 'FIRMA':
-      return 'badge-sign';
+      case "CREACION_CONTRATO":
+        return "badge-create";
 
-    case 'VALIDACION':
-      return 'badge-validation';
+      case "AGREGAR_PARTICIPANTE":
+        return "badge-add";
 
-    case 'CREACION_CONTRATO':
-      return 'badge-create';
+      case "ELIMINAR_PARTICIPANTE":
+        return "badge-remove";
 
-    case 'AGREGAR_PARTICIPANTE':
-      return 'badge-add';
+      case "EDICION_CONTRATO":
+        return "badge-edit";
 
-    case 'ELIMINAR_PARTICIPANTE':
-      return 'badge-remove';
+      case "ERROR_VALIDACION_PROVEEDOR":
+        return "badge-error";
 
-    case 'EDICION_CONTRATO':
-      return 'badge-edit';
-
-    case 'ERROR_VALIDACION_PROVEEDOR':
-      return 'badge-error';
-
-    default:
-      return 'badge-default';
+      default:
+        return "badge-default";
+    }
   }
-}
 }
