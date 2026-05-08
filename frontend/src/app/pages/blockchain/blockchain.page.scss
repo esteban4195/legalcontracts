@@ -19,6 +19,19 @@ ion-content {
   margin-bottom: 32px;
 }
 
+.contract-selector {
+  margin: 20px 0;
+  max-width: 500px;
+}
+
+.contract-selector ion-select {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  width: 100%;
+}
+
 .blockchain-title {
   font-size: 2.3rem;
   font-weight: 700;
@@ -109,6 +122,35 @@ ion-content {
   text-decoration: underline;
 }
 
+.event-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.event-badge.block-genesis {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.event-badge.block-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.event-badge.block-confirmed {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.event-badge.block-default {
+  background: #f1f5f9;
+  color: #475569;
+}
+
 .chain-visual {
   display: flex;
   align-items: center;
@@ -117,66 +159,102 @@ ion-content {
   margin-top: 42px;
   margin-bottom: 24px;
   flex-wrap: wrap;
+  padding: 20px;
 }
 
-.chain-block {
+.chain-block-iso {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  width: 95px;
-  height: 95px;
-  border-radius: 24px;
-  color: white;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-  position: relative;
+  width: 110px;
+  height: 130px;
   transition: transform 0.3s ease;
 }
 
-.chain-block:hover {
+.chain-block-iso:hover {
   transform: translateY(-8px);
 }
 
-.chain-block ion-icon {
-  font-size: 3.2rem;
-  margin-bottom: 8px;
+.chain-block-iso svg {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.15));
 }
 
-.chain-block span {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.25);
+.chain-block-iso .iso-top {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+}
+
+.chain-block-iso .iso-left {
+  stroke: rgba(0, 0, 0, 0.15);
+  stroke-width: 1;
+}
+
+.chain-block-iso .iso-right {
+  stroke: rgba(0, 0, 0, 0.1);
+  stroke-width: 1;
+}
+
+.chain-block-iso .block-number {
+  position: absolute;
+  top: 38px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.chain-block-iso .block-type {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+.chain-block-iso.block-genesis {
+  .iso-top { fill: #60a5fa; }
+  .iso-left { fill: #2563eb; }
+  .iso-right { fill: #1d4ed8; }
+  .block-type { color: #1d4ed8; }
+}
+
+.chain-block-iso.block-pending {
+  .iso-top { fill: #fbbf24; }
+  .iso-left { fill: #f59e0b; }
+  .iso-right { fill: #d97706; }
+  .block-type { color: #b45309; }
+}
+
+.chain-block-iso.block-confirmed {
+  .iso-top { fill: #34d399; }
+  .iso-left { fill: #10b981; }
+  .iso-right { fill: #059669; }
+  .block-type { color: #047857; }
+}
+
+.chain-block-iso.block-default {
+  .iso-top { fill: #94a3b8; }
+  .iso-left { fill: #64748b; }
+  .iso-right { fill: #475569; }
+  .block-type { color: #475569; }
+}
+
+.chain-arrow {
+  width: 80px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
+  color: #94a3b8;
+  margin: 0 8px;
 }
 
-.chain-block.blue {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-}
-
-.chain-block.purple {
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-}
-
-.chain-block.green {
-  background: linear-gradient(135deg, #10b981, #059669);
-}
-
-.chain-line {
-  width: 90px;
-  height: 4px;
-  margin: 0 14px;
-  border-radius: 999px;
-  background: linear-gradient(
-    90deg,
-    #cbd5e1 0%,
-    #93c5fd 50%,
-    #cbd5e1 100%
-  );
+.chain-arrow svg {
+  width: 100%;
+  height: 100%;
 }
 
 @media (max-width: 768px) {
@@ -192,18 +270,24 @@ ion-content {
     font-size: 1.9rem;
   }
 
-  .chain-block {
+  .chain-block-iso {
+    width: 85px;
+    height: 105px;
+  }
+
+  .chain-block-iso svg {
     width: 75px;
     height: 75px;
   }
 
-  .chain-block ion-icon {
-    font-size: 2.4rem;
+  .chain-block-iso .block-number {
+    top: 28px;
+    font-size: 1.2rem;
   }
 
-  .chain-line {
+  .chain-arrow {
     width: 45px;
-    margin: 0 8px;
+    margin: 0 4px;
   }
 }
 
@@ -212,7 +296,7 @@ ion-content {
     gap: 16px;
   }
 
-  .chain-line {
+  .chain-arrow {
     display: none;
   }
 
