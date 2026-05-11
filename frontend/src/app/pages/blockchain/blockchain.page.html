@@ -72,10 +72,10 @@
             <tr *ngFor="let block of blockchain; let idx = index">
               <td>{{ block.block_number }}</td>
               <td><span class="event-badge" [ngClass]="getBlockClass(idx)">{{ block.event_type }}</span></td>
-              <td><a href="#">{{ block.hash | slice:0:18 }}...</a></td>
+              <td><span class="hash-text">{{ block.hash | slice:0:18 }}...</span></td>
               <td>
                 <ng-container *ngIf="block.previous_hash; else emptyHash">
-                  <a href="#">{{ block.previous_hash | slice:0:18 }}...</a>
+                  <span class="hash-text">{{ block.previous_hash | slice:0:18 }}...</span>
                 </ng-container>
                 <ng-template #emptyHash>-</ng-template>
               </td>

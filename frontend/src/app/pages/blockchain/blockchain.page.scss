@@ -173,13 +173,13 @@ ion-content {
   transition: background 0.3s ease;
 }
 
-.blockchain-table td a {
+.hash-text {
   color: #2563eb;
-  text-decoration: none;
+  cursor: pointer;
   font-weight: 600;
 }
 
-.blockchain-table td a:hover {
+.hash-text:hover {
   text-decoration: underline;
 }
 
