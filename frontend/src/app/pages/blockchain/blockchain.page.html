@@ -17,18 +17,44 @@
       </ion-select>
     </div>
 
-    <p class="blockchain-desc" *ngIf="contract">
-      Contrato: {{ contract.title }} (#{{ contract.id }}) • Estado: {{ contract.status }}
-    </p>
     <div *ngIf="loading" class="blockchain-loading">Cargando historial...</div>
     <div *ngIf="error" class="blockchain-error">{{ error }}</div>
   </div>
 
   <ng-container *ngIf="!loading && !error && contract">
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Total Bloques</span>
+          <span class="metric-value">{{ blockchain.length }}</span>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12,7 12,12 15,15"/>
+          </svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Último Bloque</span>
+          <span class="metric-value">{{ blockchain[blockchain.length - 1]?.block_number || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
     <div class="contract-card">
       <div class="contract-header">
         <h2>Contrato</h2>
-        <p>Contrato de Prestación de Servicios #ID: {{ contract.id }}</p>
+        <p>Contrato: {{ contract.title }} (#{{ contract.id }}) • Estado: {{ contract.status }}</p>
       </div>
 
       <div class="table-container" *ngIf="blockchain.length > 0; else noBlocks">
