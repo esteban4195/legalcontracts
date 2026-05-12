@@ -1,0 +1,369 @@
+:host {
+  --ion-background-color: #f8fafc;
+  --ion-text-color: #0f172a;
+}
+
+ion-content {
+  --background: #f8fafc;
+  --color: #0f172a;
+}
+
+.blockchain-page {
+  padding: 32px;
+  min-height: 100vh;
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+.blockchain-header {
+  margin-bottom: 32px;
+}
+
+.contract-selector {
+  margin: 20px 0;
+  max-width: 500px;
+}
+
+.contract-selector ion-select {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  padding: 8px;
+  width: 100%;
+}
+
+.blockchain-title {
+  font-size: 2.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+}
+
+.blockchain-subtitle,
+.blockchain-desc {
+  font-size: 1.05rem;
+  color: #64748b;
+  margin: 8px 0 0;
+}
+
+.metrics-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.metric-card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  padding: 20px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.metric-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+}
+
+.metric-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+}
+
+.metric-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.metric-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.metric-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #2563eb !important;
+  line-height: 1;
+}
+
+.contract-card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 35px rgba(15, 23, 42, 0.08);
+  padding: 28px;
+  margin-bottom: 36px;
+  border: 1px solid #e2e8f0;
+}
+
+.contract-header {
+  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+}
+
+.contract-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.contract-header p {
+  margin: 10px 0 0;
+  font-size: 1rem;
+  color: #64748b;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 14px;
+}
+
+.blockchain-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+}
+
+.blockchain-table thead {
+  background: #f1f5f9;
+}
+
+.blockchain-table th {
+  color: #334155;
+  padding: 18px 20px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.blockchain-table td {
+  color: #475569;
+  padding: 18px 20px;
+  font-size: 0.95rem;
+  border-top: 1px solid #e2e8f0;
+  white-space: nowrap;
+}
+
+.blockchain-table tbody tr:hover {
+  background: #f8fafc;
+  transition: background 0.3s ease;
+}
+
+.hash-text {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.hash-text:hover {
+  text-decoration: underline;
+}
+
+.event-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.event-badge.block-genesis {
+  background: #dbeafe;
+  color: #1d4ed8;
+}
+
+.event-badge.block-pending {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.event-badge.block-confirmed {
+  background: #d1fae5;
+  color: #047857;
+}
+
+.event-badge.block-default {
+  background: #f1f5f9;
+  color: #475569;
+}
+
+.chain-visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  margin-top: 42px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  padding: 20px;
+}
+
+.chain-block-iso {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 110px;
+  height: 130px;
+  transition: transform 0.3s ease;
+}
+
+.chain-block-iso:hover {
+  transform: translateY(-8px);
+}
+
+.chain-block-iso svg {
+  width: 100px;
+  height: 100px;
+  filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.15));
+}
+
+.chain-block-iso .iso-top {
+  stroke: rgba(255, 255, 255, 0.4);
+  stroke-width: 1;
+}
+
+.chain-block-iso .iso-left {
+  stroke: rgba(0, 0, 0, 0.15);
+  stroke-width: 1;
+}
+
+.chain-block-iso .iso-right {
+  stroke: rgba(0, 0, 0, 0.1);
+  stroke-width: 1;
+}
+
+.chain-block-iso .block-number {
+  position: absolute;
+  top: 38px;
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.chain-block-iso .block-type {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  margin-top: 8px;
+  letter-spacing: 0.5px;
+}
+
+.chain-block-iso.block-genesis {
+  .iso-top { fill: #60a5fa; }
+  .iso-left { fill: #2563eb; }
+  .iso-right { fill: #1d4ed8; }
+  .block-type { color: #1d4ed8; }
+}
+
+.chain-block-iso.block-pending {
+  .iso-top { fill: #fbbf24; }
+  .iso-left { fill: #f59e0b; }
+  .iso-right { fill: #d97706; }
+  .block-type { color: #b45309; }
+}
+
+.chain-block-iso.block-confirmed {
+  .iso-top { fill: #34d399; }
+  .iso-left { fill: #10b981; }
+  .iso-right { fill: #059669; }
+  .block-type { color: #047857; }
+}
+
+.chain-block-iso.block-default {
+  .iso-top { fill: #94a3b8; }
+  .iso-left { fill: #64748b; }
+  .iso-right { fill: #475569; }
+  .block-type { color: #475569; }
+}
+
+.chain-arrow {
+  width: 80px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  margin: 0 8px;
+}
+
+.chain-arrow svg {
+  width: 100%;
+  height: 100%;
+}
+
+@media (max-width: 768px) {
+  .blockchain-page {
+    padding: 18px;
+  }
+
+  .contract-card {
+    padding: 18px;
+  }
+
+  .blockchain-title {
+    font-size: 1.9rem;
+  }
+
+  .chain-block-iso {
+    width: 85px;
+    height: 105px;
+  }
+
+  .chain-block-iso svg {
+    width: 75px;
+    height: 75px;
+  }
+
+  .chain-block-iso .block-number {
+    top: 28px;
+    font-size: 1.2rem;
+  }
+
+  .chain-arrow {
+    width: 45px;
+    margin: 0 4px;
+  }
+}
+
+@media (max-width: 576px) {
+  .chain-visual {
+    gap: 16px;
+  }
+
+  .chain-arrow {
+    display: none;
+  }
+
+  .blockchain-table th,
+  .blockchain-table td {
+    padding: 14px 12px;
+    font-size: 0.85rem;
+  }
+}
