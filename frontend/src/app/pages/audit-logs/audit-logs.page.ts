@@ -1,6 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { AuditLogsService, AuditLog } from "../../services/audit-logs.service";
 
 @Component({
   selector: "app-audit-logs",
@@ -11,9 +12,10 @@ import { FormsModule } from "@angular/forms";
 })
 export class AuditLogsPage implements OnInit {
   // Simulación temporal de logs a espera de backend (Nasly)
-  logs: any[] = [];
+  logs: AuditLog[] = [];
+  filteredLogs: AuditLog[] = [];
 
-  filteredLogs: any[] = [];
+  constructor(private auditLogsService: AuditLogsService) {}
 
   selectedAction: string = "";
   selectedUser: string = "";
@@ -34,39 +36,29 @@ export class AuditLogsPage implements OnInit {
   }
 
   ngOnInit(): void {
-    this.logs = [
-      {
-        fecha: "2026-04-29 08:30:15",
-        accion: "LOGIN",
-        contrato: "-",
-        usuario: "Admin Usuario",
-        detalles: "Inicio de sesión exitoso",
-      },
-      {
-        fecha: "2026-04-29 09:15:42",
-        accion: "CREACION_CONTRATO",
-        contrato: "#1",
-        usuario: "Admin Usuario",
-        detalles: "Contrato de Servicios TI",
-      },
-      {
-        fecha: "2026-04-29 10:22:18",
-        accion: "FIRMA",
-        contrato: "#1",
-        usuario: "Juan Pérez",
-        detalles: "Firma aplicada al contrato",
-      },
-      {
-        fecha: "2026-04-29 10:23:05",
-        accion: "VALIDACION",
-        contrato: "#1",
-        usuario: "Sistema",
-        detalles: "Validación exitosa",
-      },
-    ];
 
-    this.filteredLogs = [...this.logs];
-  }
+  this.isLoading = true;
+
+  this.auditLogsService.getAll().subscribe({
+
+    next: (resp) => {
+
+      this.logs = resp;
+      this.filteredLogs = [...resp];
+
+      this.isLoading = false;
+    },
+
+    error: (err) => {
+
+      this.isLoading = false;
+
+      if (err.status === 403) {
+        this.isForbidden = true;
+      }
+    }
+  });
+}
 
   applyFilters(): void {
     this.filteredLogs = this.logs.filter((log) => {
