@@ -22,7 +22,7 @@
 
 .cards-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 22px;
     margin-bottom: 28px;
 }
@@ -87,19 +87,27 @@
 /* ICONOS COLORES */
 
 .icon-blue {
-    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    background: linear-gradient(135deg, #8eb3ee, #2563eb);
 }
 
 .icon-green {
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+    background: linear-gradient(135deg, #90e2ae, #16a34a);
 }
 
 .icon-yellow {
-    background: linear-gradient(135deg, #facc15, #eab308);
+    background: linear-gradient(135deg, #e2d18e, #eab308);
 }
 
 .icon-purple {
-    background: linear-gradient(135deg, #a855f7, #7c3aed);
+    background: linear-gradient(135deg, #c3a4e0, #7c3aed);
+}
+
+.icon-ligth-neon {
+    background: linear-gradient(135deg, #b4db9d, #91e721);
+}
+
+.icon-ligth-viwet {
+    background: linear-gradient(135deg, #cc9ab3, #e2454d);
 }
 
 /* ICONO DENTRO */

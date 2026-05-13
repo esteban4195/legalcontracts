@@ -3,13 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// export interface DashboardSummary {
-//     total_contracts: number;
-//     firmados: number;
-//     contracts_by_month: { month: string; count: number }[];
-//     recent_activity: { action: string; timestamp: string }[];
-//     recent_contracts: any[];
-// }
 
 export interface RecentContract {
     id: number;
@@ -21,9 +14,11 @@ export interface RecentContract {
 
 export interface DashboardSummary {
     total_contracts: number;
-    firmados: number;
-    validated_contracts?: number;
-    borradores?: number;
+    signed_contracts: number;
+    draft_contracts: number;
+    validated_contracts: number;
+    active_users: number;
+    active_providers: number;
     recent_contracts: RecentContract[];
 }
 

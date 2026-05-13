@@ -70,7 +70,7 @@
         </div>
 
         <div class="stat-number">
-          {{ summary?.firmados || 0 }}
+          {{ summary?.signed_contracts }}
         </div>
 
       </div>
@@ -91,7 +91,7 @@
         </div>
 
         <div class="stat-number">
-          {{ summary?.borradores || 0 }}
+          {{ summary?.draft_contracts }}
         </div>
 
       </div>
@@ -113,6 +113,49 @@
 
         <div class="stat-number">
           {{ summary?.validated_contracts || 0 }}
+        </div>
+
+      </div>
+
+
+      <!-- USUARIOS ACTIVOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Usuarios Activos
+          </span>
+
+          <span class="stat-icon icon-ligth-neon">
+            <ion-icon name="person-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.active_users || 0 }}
+        </div>
+
+      </div>
+
+      <!-- PROVEEDORES ACTIVOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Proveedores Activos
+          </span>
+
+          <span class="stat-icon icon-ligth-viwet">
+            <ion-icon name="business-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.active_providers || 0 }}
         </div>
 
       </div>
