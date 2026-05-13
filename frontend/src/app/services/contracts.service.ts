@@ -24,6 +24,8 @@ export interface ContractParticipant {
   role_in_contract: 'CLIENTE' | 'PROVEEDOR' | 'TESTIGO';
   has_signed: boolean;
   signed_at: string | null;
+  signature_image_base64: string | null;
+  signature_updated_at: string | null;
 }
 
 export interface BlockchainBlock {
@@ -92,8 +94,12 @@ export class ContractsService {
     return this.http.put<ContractDetail>(`${API}/contracts/${id}`, payload);
   }
 
-  sign(id: number): Observable<ContractDetail> {
-    return this.http.post<ContractDetail>(`${API}/contracts/${id}/sign`, {});
+  sign(id: number, signatureBase64: string): Observable<ContractDetail> {
+    return this.http.post<ContractDetail>(`${API}/contracts/${id}/sign`, { signature_image_base64: signatureBase64 });
+  }
+
+  updateSignature(id: number, signatureBase64: string): Observable<ContractDetail> {
+    return this.http.put<ContractDetail>(`${API}/contracts/${id}/sign`, { signature_image_base64: signatureBase64 });
   }
 
   validate(id: number): Observable<ContractDetail> {

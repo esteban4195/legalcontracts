@@ -53,6 +53,17 @@ class ContractCreate(BaseModel):
         return v
 
 
+class SignRequest(BaseModel):
+    signature_image_base64: str
+
+    @field_validator('signature_image_base64')
+    @classmethod
+    def signature_not_empty(cls, v):
+        if not v or not v.strip():
+            raise ValueError('La firma no puede estar vacía')
+        return v.strip()
+
+
 class ContractUpdate(BaseModel):
     title: Optional[str] = None
     content: Optional[str] = None

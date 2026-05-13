@@ -1,9 +1,114 @@
-<div class="placeholder-page">
-  <div class="placeholder-header">
-    <h1 class="placeholder-title">Blockchain</h1>
+<div class="blockchain-page">
+  <div class="blockchain-header">
+    <h1 class="blockchain-title">Blockchain</h1>
+    <p class="blockchain-subtitle">Cadena de bloques del contrato</p>
+
+    <div class="contract-selector">
+      <ion-select
+        label="Seleccionar contrato"
+        [compareWith]="compareById"
+        [value]="contractId"
+        (ionChange)="onContractChange($event)"
+        placeholder="Seleccione un contrato"
+        interface="action-sheet">
+        <ion-select-option *ngFor="let c of allContracts" [value]="c.id">
+          {{ c.title }} (#{{ c.id }}) - {{ c.status }}
+        </ion-select-option>
+      </ion-select>
+    </div>
+
+    <div *ngIf="loading" class="blockchain-loading">Cargando historial...</div>
+    <div *ngIf="error" class="blockchain-error">{{ error }}</div>
   </div>
-  <div class="placeholder-card">
-    <span class="placeholder-icon">⛓</span>
-    <p class="placeholder-text">Vista en construcción</p>
-  </div>
+
+  <ng-container *ngIf="!loading && !error && contract">
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="3" width="7" height="7" rx="1"/>
+            <rect x="14" y="3" width="7" height="7" rx="1"/>
+            <rect x="3" y="14" width="7" height="7" rx="1"/>
+            <rect x="14" y="14" width="7" height="7" rx="1"/>
+          </svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Total Bloques</span>
+          <span class="metric-value">{{ blockchain.length }}</span>
+        </div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"/>
+            <polyline points="12,7 12,12 15,15"/>
+          </svg>
+        </div>
+        <div class="metric-info">
+          <span class="metric-label">Último Bloque</span>
+          <span class="metric-value">{{ blockchain[blockchain.length - 1]?.block_number || '—' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="contract-card">
+      <div class="contract-header">
+        <h2>Contrato</h2>
+        <p>Contrato: {{ contract.title }} (#{{ contract.id }}) • Estado: {{ contract.status }}</p>
+      </div>
+
+      <div class="table-container" *ngIf="blockchain.length > 0; else noBlocks">
+        <table class="blockchain-table">
+          <thead>
+            <tr>
+              <th>Bloque</th>
+              <th>Tipo</th>
+              <th>Hash</th>
+              <th>Hash Anterior</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let block of blockchain; let idx = index">
+              <td>{{ block.block_number }}</td>
+              <td><span class="event-badge" [ngClass]="getBlockClass(idx)">{{ block.event_type }}</span></td>
+              <td><span class="hash-text">{{ block.hash | slice:0:18 }}...</span></td>
+              <td>
+                <ng-container *ngIf="block.previous_hash; else emptyHash">
+                  <span class="hash-text">{{ block.previous_hash | slice:0:18 }}...</span>
+                </ng-container>
+                <ng-template #emptyHash>-</ng-template>
+              </td>
+              <td>{{ block.created_at }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ng-template #noBlocks>
+        <p class="blockchain-empty">No hay bloques registrados para este contrato.</p>
+      </ng-template>
+    </div>
+
+    <div class="chain-visual" *ngIf="blockchain.length > 0">
+      <ng-container *ngFor="let block of blockchain; let idx = index">
+        <div class="chain-block-iso" [ngClass]="getBlockClass(idx)">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <polygon class="iso-top" points="50,10 90,30 50,50 10,30" />
+            <polygon class="iso-left" points="10,30 50,50 50,90 10,70" />
+            <polygon class="iso-right" points="90,30 50,50 50,90 90,70" />
+          </svg>
+          <span class="block-number">{{ block.block_number }}</span>
+          <span class="block-type">{{ block.event_type }}</span>
+        </div>
+
+        <div class="chain-arrow" *ngIf="idx < blockchain.length - 1">
+          <svg viewBox="0 0 80 30" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="15" x2="60" y2="15" stroke="currentColor" stroke-width="2" stroke-dasharray="6,4" />
+            <polygon points="60,8 80,15 60,22" fill="currentColor" />
+          </svg>
+        </div>
+      </ng-container>
+    </div>
+  </ng-container>
 </div>
