@@ -1,10 +1,368 @@
-<div class="placeholder-page">
-  <div class="placeholder-header">
-    <h1 class="placeholder-title">Dashboard</h1>
-    <p class="placeholder-user" *ngIf="user">Bienvenido, {{ user.name }}</p>
+<div class="dashboard-container">
+
+  <!-- TITULO -->
+  <h1 class="dashboard-title">
+    Dashboard
+  </h1>
+
+  <p class="dashboard-subtitle">
+    Resumen general del sistema
+  </p>
+
+  <!-- LOADING -->
+  <div *ngIf="loading" class="loading-container">
+
+    <div class="spinner"></div>
+
+    <p>
+      Cargando dashboard...
+    </p>
+
   </div>
-  <div class="placeholder-card">
-    <span class="placeholder-icon">▦</span>
-    <p class="placeholder-text">Vista en construcción</p>
+
+  <!-- ERROR -->
+  <div *ngIf="errorMessage && !loading" class="error-message">
+
+    {{ errorMessage }}
+
   </div>
+
+  <!-- CONTENIDO -->
+  <div *ngIf="!loading && !errorMessage">
+
+    <!-- CARDS -->
+    <div class="cards-grid">
+
+      <!-- TOTAL -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Total Contratos
+          </span>
+
+          <span class="stat-icon icon-blue">
+            <ion-icon name="document-text-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.total_contracts || 0 }}
+        </div>
+
+      </div>
+
+      <!-- FIRMADOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Firmados
+          </span>
+
+          <span class="stat-icon icon-green">
+            <ion-icon name="checkmark-done-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.signed_contracts }}
+        </div>
+
+      </div>
+
+      <!-- BORRADORES -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Pendientes
+          </span>
+
+          <span class="stat-icon icon-yellow">
+            <ion-icon name="time-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.draft_contracts }}
+        </div>
+
+      </div>
+
+      <!-- VALIDADOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Validados
+          </span>
+
+          <span class="stat-icon icon-purple">
+            <ion-icon name="checkmark-circle-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.validated_contracts || 0 }}
+        </div>
+
+      </div>
+
+
+      <!-- USUARIOS ACTIVOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Usuarios Activos
+          </span>
+
+          <span class="stat-icon icon-ligth-neon">
+            <ion-icon name="person-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.active_users || 0 }}
+        </div>
+
+      </div>
+
+      <!-- PROVEEDORES ACTIVOS -->
+      <div class="stat-card">
+
+        <div class="stat-header">
+
+          <span class="stat-title">
+            Proveedores Activos
+          </span>
+
+          <span class="stat-icon icon-ligth-viwet">
+            <ion-icon name="business-outline"></ion-icon>
+          </span>
+
+        </div>
+
+        <div class="stat-number">
+          {{ summary?.active_providers || 0 }}
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- GRAFICA + ACTIVIDAD -->
+    <div class="content-grid">
+
+      <!-- GRAFICA -->
+      <div class="chart-card">
+
+        <h2 class="section-title">
+          Contratos por Mes
+        </h2>
+
+        <div class="chart-bars">
+
+          <div class="chart-item">
+            <div class="bar" style="height: 40%;"></div>
+            <span class="month">Ene</span>
+          </div>
+
+          <div class="chart-item">
+            <div class="bar" style="height: 55%;"></div>
+            <span class="month">Feb</span>
+          </div>
+
+          <div class="chart-item">
+            <div class="bar" style="height: 65%;"></div>
+            <span class="month">Mar</span>
+          </div>
+
+          <div class="chart-item">
+            <div class="bar" style="height: 80%;"></div>
+            <span class="month">Abr</span>
+          </div>
+
+          <div class="chart-item">
+            <div class="bar" style="height: 95%;"></div>
+            <span class="month">May</span>
+          </div>
+
+          <div class="chart-item">
+            <div class="bar" style="height: 70%;"></div>
+            <span class="month">Jun</span>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ACTIVIDAD -->
+      <div class="activity-card">
+
+        <h2 class="section-title">
+          Actividad Reciente
+        </h2>
+
+        <div class="activity-item">
+
+          <div class="activity-text">
+            Contrato firmado exitosamente
+          </div>
+
+          <div class="activity-time">
+            Hace 2 horas
+          </div>
+
+        </div>
+
+        <div class="activity-item">
+
+          <div class="activity-text">
+            Validación de proveedor completada
+          </div>
+
+          <div class="activity-time">
+            Hace 5 horas
+          </div>
+
+        </div>
+
+        <div class="activity-item">
+
+          <div class="activity-text">
+            Registro en blockchain agregado
+          </div>
+
+          <div class="activity-time">
+            Hace 1 día
+          </div>
+
+        </div>
+
+        <div class="activity-item">
+
+          <div class="activity-text">
+            Nuevo borrador creado
+          </div>
+
+          <div class="activity-time">
+            Hace 2 días
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- TABLA -->
+    <div class="table-card">
+
+      <h2 class="section-title">
+        Contratos Recientes
+      </h2>
+
+      <div class="table-wrapper">
+
+        <table class="contracts-table">
+
+          <thead>
+
+            <tr>
+
+              <th>ID</th>
+
+              <th>Título</th>
+
+              <th>Estado</th>
+
+              <th>Proveedor</th>
+
+              <th>Fecha</th>
+
+              <th>Acciones</th>
+
+            </tr>
+
+          </thead>
+
+          <!-- TABLA CON DATOS -->
+          <tbody *ngIf="summary?.recent_contracts?.length; else emptyContracts">
+
+            <tr *ngFor="let contract of summary?.recent_contracts">
+
+              <td>
+                #{{ contract.id }}
+              </td>
+
+              <td>
+                {{ contract.title }}
+              </td>
+
+              <td>
+
+                <span class="status" [ngClass]="{
+                    'status-firmado': contract.status === 'FIRMADO',
+                    'status-validado': contract.status === 'VALIDADO',
+                    'status-borrador': contract.status === 'BORRADOR',
+                    'status-error': contract.status === 'ERROR'
+                  }">
+
+                  {{ contract.status }}
+
+                </span>
+
+              </td>
+
+              <td>
+                {{ contract.provider }}
+              </td>
+
+              <td>
+                {{ contract.date }}
+              </td>
+
+              <td>
+
+                <span class="action-link">
+                  Ver detalles
+                </span>
+
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+        <!-- ESTADO VACIO -->
+        <ng-template #emptyContracts>
+
+          <div class="empty-message">
+
+            No hay contratos recientes disponibles.
+
+          </div>
+
+        </ng-template>
+
+      </div>
+
+    </div>
+
+  </div>
+
 </div>
