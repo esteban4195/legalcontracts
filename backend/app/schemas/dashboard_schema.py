@@ -1,11 +1,12 @@
 from pydantic import BaseModel
 from typing import List
+from datetime import datetime
 
 class RecentContract(BaseModel):
     id: int
     title: str
     status: str
-    created_at: str  
+    created_at: datetime
 
 class DashboardSummary(BaseModel):
     total_contracts: int
