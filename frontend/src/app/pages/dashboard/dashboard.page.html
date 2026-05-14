@@ -155,7 +155,7 @@
         </div>
 
         <div class="stat-number">
-          {{ summary?.active_providers || 0 }}
+          {{ summary?.active_cloud_providers || 0 }}
         </div>
 
       </div>
@@ -168,100 +168,38 @@
       <!-- GRAFICA -->
       <div class="chart-card">
 
-        <h2 class="section-title">
-          Contratos por Mes
-        </h2>
+        <h2 class="section-title">Contratos por Mes</h2>
 
-        <div class="chart-bars">
-
-          <div class="chart-item">
-            <div class="bar" style="height: 40%;"></div>
-            <span class="month">Ene</span>
+        <div class="chart-bars" *ngIf="summary?.contracts_by_month?.length; else noChartData">
+          <div class="chart-item" *ngFor="let item of summary?.contracts_by_month">
+            <div class="bar" [style.height]="getBarHeight(item.total)"></div>
+            <span class="month">{{ getMonthName(item.month) }}</span>
           </div>
-
-          <div class="chart-item">
-            <div class="bar" style="height: 55%;"></div>
-            <span class="month">Feb</span>
-          </div>
-
-          <div class="chart-item">
-            <div class="bar" style="height: 65%;"></div>
-            <span class="month">Mar</span>
-          </div>
-
-          <div class="chart-item">
-            <div class="bar" style="height: 80%;"></div>
-            <span class="month">Abr</span>
-          </div>
-
-          <div class="chart-item">
-            <div class="bar" style="height: 95%;"></div>
-            <span class="month">May</span>
-          </div>
-
-          <div class="chart-item">
-            <div class="bar" style="height: 70%;"></div>
-            <span class="month">Jun</span>
-          </div>
-
         </div>
+
+        <ng-template #noChartData>
+          <p class="empty-chart">Sin datos para el año actual.</p>
+        </ng-template>
 
       </div>
 
       <!-- ACTIVIDAD -->
       <div class="activity-card">
 
-        <h2 class="section-title">
-          Actividad Reciente
-        </h2>
+        <h2 class="section-title">Actividad Reciente</h2>
 
-        <div class="activity-item">
-
-          <div class="activity-text">
-            Contrato firmado exitosamente
+        <ng-container *ngIf="summary?.recent_activity?.length; else noActivity">
+          <div class="activity-item" *ngFor="let item of summary?.recent_activity">
+            <div class="activity-text">
+              {{ getActionLabel(item.action_type) }} — {{ item.contract_title }}
+            </div>
+            <div class="activity-time">{{ item.user_name }} · {{ item.created_at | date:'dd/MM/yyyy HH:mm' }}</div>
           </div>
+        </ng-container>
 
-          <div class="activity-time">
-            Hace 2 horas
-          </div>
-
-        </div>
-
-        <div class="activity-item">
-
-          <div class="activity-text">
-            Validación de proveedor completada
-          </div>
-
-          <div class="activity-time">
-            Hace 5 horas
-          </div>
-
-        </div>
-
-        <div class="activity-item">
-
-          <div class="activity-text">
-            Registro en blockchain agregado
-          </div>
-
-          <div class="activity-time">
-            Hace 1 día
-          </div>
-
-        </div>
-
-        <div class="activity-item">
-
-          <div class="activity-text">
-            Nuevo borrador creado
-          </div>
-
-          <div class="activity-time">
-            Hace 2 días
-          </div>
-
-        </div>
+        <ng-template #noActivity>
+          <p class="empty-chart">Sin actividad reciente.</p>
+        </ng-template>
 
       </div>
 
@@ -326,19 +264,17 @@
 
               </td>
 
+              <td>{{ contract.provider }}</td>
+
               <td>
-                {{ contract.provider }}
+                {{ contract.created_at | date:'dd/MM/yyyy' }}
               </td>
 
               <td>
-                {{ contract.date }}
-              </td>
 
-              <td>
-
-                <span class="action-link">
+                <a class="action-link" [routerLink]="['/contracts', contract.id]">
                   Ver detalles
-                </span>
+                </a>
 
               </td>
 

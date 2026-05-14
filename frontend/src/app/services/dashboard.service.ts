@@ -9,7 +9,20 @@ export interface RecentContract {
     title: string;
     status: string;
     provider: string;
-    date: string;
+    created_at: string;
+}
+
+export interface MonthlyCount {
+    month: number;
+    total: number;
+}
+
+export interface RecentActivity {
+    action_type: string;
+    description: string;
+    user_name: string;
+    contract_title: string;
+    created_at: string;
 }
 
 export interface DashboardSummary {
@@ -18,8 +31,10 @@ export interface DashboardSummary {
     draft_contracts: number;
     validated_contracts: number;
     active_users: number;
-    active_providers: number;
+    active_cloud_providers: number;
     recent_contracts: RecentContract[];
+    contracts_by_month: MonthlyCount[];
+    recent_activity: RecentActivity[];
 }
 
 @Injectable({
