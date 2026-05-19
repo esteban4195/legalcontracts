@@ -61,9 +61,12 @@ def list_audit_logs(
         query += " AND al.user_id = %s"
         params.append(user_id)
 
-    if date_from and date_to:
-        query += " AND al.created_at BETWEEN %s AND %s"
+    if date_from:
+        query += " AND al.created_at >= %s"
         params.append(date_from)
+
+    if date_to:
+        query += " AND al.created_at <= %s"
         params.append(date_to)
 
     query += " ORDER BY al.created_at DESC"
