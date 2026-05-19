@@ -5,9 +5,9 @@ from datetime import datetime
 
 class AuditLogOut(BaseModel):
     id: int
-    fecha_hora: datetime
+    created_at: datetime
     action_type: str
     contract_id: Optional[int] = None
     user_id: int
     user_name: str
-    description: Optional[str] = None
+    description: str
