@@ -1,21 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
+import { RouterModule } from '@angular/router';
 import { DashboardService, DashboardSummary } from '../../services/dashboard.service';
+
+const MONTH_NAMES = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
 @Component({
     selector: 'app-dashboard',
     templateUrl: './dashboard.page.html',
     styleUrls: ['./dashboard.page.scss'],
     standalone: true,
-    imports: [CommonModule, IonicModule]
+    imports: [CommonModule, IonicModule, RouterModule]
 })
 export class DashboardPage implements OnInit {
 
     summary: DashboardSummary | null = null;
-
     loading = true;
-
     errorMessage = '';
 
     constructor(private dashboardService: DashboardService) { }
@@ -23,94 +24,41 @@ export class DashboardPage implements OnInit {
     ngOnInit(): void {
         this.loadDashboard();
     }
-    // con datos reales del backend
+
     loadDashboard(): void {
-
         this.loading = true;
-
         this.dashboardService.getSummary().subscribe({
-
             next: (data) => {
-
                 this.summary = data;
-
                 this.loading = false;
             },
-
             error: () => {
-
                 this.loading = false;
-
-                this.errorMessage =
-                    'Información no disponible en el momento.';
+                this.errorMessage = 'Información no disponible en el momento.';
             }
         });
     }
 
-    // con datos simulados para pruebas sin backend
-    // loadDashboard(): void {
+    getMonthName(month: number): string {
+        return MONTH_NAMES[month - 1] || '';
+    }
 
-    //     this.loading = true;
+    getBarHeight(total: number): string {
+        const max = Math.max(...(this.summary?.contracts_by_month.map(m => m.total) ?? [1]));
+        return `${Math.round((total / max) * 90) + 10}%`;
+    }
 
-    //     setTimeout(() => {
-
-    //         this.summary = {
-
-    //             total_contracts: 248,
-
-    //             signed_contracts: 186,
-
-    //             draft_contracts: 42,
-
-    //             validated_contracts: 156,
-
-    //             active_users: 24,
-
-    //             active_providers: 8,
-
-    //             recent_contracts: [
-
-    //                 {
-    //                     id: 1,
-    //                     title: 'Contrato de Servicios TI',
-    //                     status: 'FIRMADO',
-    //                     provider: 'AWS',
-    //                     date: '2026-04-28'
-    //                 },
-
-    //                 {
-    //                     id: 2,
-    //                     title: 'Acuerdo de Confidencialidad',
-    //                     status: 'VALIDADO',
-    //                     provider: 'Azure',
-    //                     date: '2026-04-27'
-    //                 },
-
-    //                 {
-    //                     id: 3,
-    //                     title: 'Contrato de Consultoría',
-    //                     status: 'BORRADOR',
-    //                     provider: 'GCP',
-    //                     date: '2026-04-26'
-    //                 },
-
-    //                 {
-    //                     id: 4,
-    //                     title: 'Licencia de Software',
-    //                     status: 'FIRMADO',
-    //                     provider: 'AWS',
-    //                     date: '2026-04-25'
-    //                 }
-
-    //             ]
-
-    //         };
-
-    //         this.loading = false;
-
-    //     }, 1000);
-
-    // }
-
-    
+    getActionLabel(action: string): string {
+        const labels: Record<string, string> = {
+            CREACION_CONTRATO: 'Contrato creado',
+            AGREGAR_PARTICIPANTE: 'Participante agregado',
+            ELIMINAR_PARTICIPANTE: 'Participante eliminado',
+            EDICION_CONTRATO: 'Contrato editado',
+            FIRMA: 'Contrato firmado',
+            ACTUALIZACION_FIRMA: 'Firma actualizada',
+            VALIDACION: 'Contrato validado',
+            ERROR_VALIDACION_PROVEEDOR: 'Error de validación',
+        };
+        return labels[action] ?? action;
+    }
 }
