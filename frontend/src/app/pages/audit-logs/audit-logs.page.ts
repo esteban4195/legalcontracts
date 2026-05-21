@@ -28,11 +28,11 @@ export class AuditLogsPage implements OnInit {
   }
 
   get totalFirmas(): number {
-    return this.logs.filter((log) => log.accion === "FIRMA").length;
+    return this.logs.filter((log) => log.action_type === "FIRMA").length;
   }
 
   get totalValidaciones(): number {
-    return this.logs.filter((log) => log.accion === "VALIDACION").length;
+    return this.logs.filter((log) => log.action_type === "VALIDACION").length;
   }
 
   ngOnInit(): void {
@@ -64,47 +64,29 @@ export class AuditLogsPage implements OnInit {
     this.filteredLogs = this.logs.filter((log) => {
       const matchAction =
         !this.selectedAction ||
-        log.accion.toLowerCase().includes(this.selectedAction.toLowerCase());
+        log.action_type.toLowerCase().includes(this.selectedAction.toLowerCase());
 
       const matchUser =
         !this.selectedUser ||
-        log.usuario.toLowerCase().includes(this.selectedUser.toLowerCase());
+        log.user_name.toLowerCase().includes(this.selectedUser.toLowerCase());
 
       return matchAction && matchUser;
     });
   }
 
-  getActionClass(action: string): string {
-    switch (action) {
-      case "LOGIN":
-        return "badge-login";
-
-      case "LOGOUT":
-        return "badge-logout";
-
-      case "FIRMA":
-        return "badge-sign";
-
-      case "VALIDACION":
-        return "badge-validation";
-
-      case "CREACION_CONTRATO":
-        return "badge-create";
-
-      case "AGREGAR_PARTICIPANTE":
-        return "badge-add";
-
-      case "ELIMINAR_PARTICIPANTE":
-        return "badge-remove";
-
-      case "EDICION_CONTRATO":
-        return "badge-edit";
-
-      case "ERROR_VALIDACION_PROVEEDOR":
-        return "badge-error";
-
-      default:
-        return "badge-default";
-    }
+  getActionClass(actionType: string): string {
+    const map: Record<string, string> = {
+      LOGIN: "badge-login",
+      LOGOUT: "badge-logout",
+      FIRMA: "badge-sign",
+      ACTUALIZACION_FIRMA: "badge-sign",
+      VALIDACION: "badge-validation",
+      CREACION_CONTRATO: "badge-create",
+      AGREGAR_PARTICIPANTE: "badge-add",
+      ELIMINAR_PARTICIPANTE: "badge-remove",
+      EDICION_CONTRATO: "badge-edit",
+      ERROR_VALIDACION_PROVEEDOR: "badge-error",
+    };
+    return map[actionType] ?? "badge-default";
   }
 }
