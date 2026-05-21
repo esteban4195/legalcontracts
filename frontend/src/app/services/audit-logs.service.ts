@@ -6,26 +6,13 @@ import { environment } from '../../environments/environment';
 const API = environment.apiUrl;
 
 export interface AuditLog {
-  id?: number;
-
-  fecha: string;
-
-  accion:
-    | 'LOGIN'
-    | 'LOGOUT'
-    | 'CREACION_CONTRATO'
-    | 'AGREGAR_PARTICIPANTE'
-    | 'ELIMINAR_PARTICIPANTE'
-    | 'EDICION_CONTRATO'
-    | 'FIRMA'
-    | 'VALIDACION'
-    | 'ERROR_VALIDACION_PROVEEDOR';
-
-  contrato: string;
-
-  usuario: string;
-
-  detalles: string;
+  id: number;
+  created_at: string;
+  action_type: string;
+  contract_id: number | null;
+  user_id: number;
+  user_name: string;
+  description: string;
 }
 
 @Injectable({
@@ -36,18 +23,13 @@ export class AuditLogsService {
   constructor(private http: HttpClient) {}
 
   getAll(filters?: {
-    accion?: string;
-    usuario?: string;
+    action_type?: string;
   }): Observable<AuditLog[]> {
 
     let params = new HttpParams();
 
-    if (filters?.accion) {
-      params = params.set('accion', filters.accion);
-    }
-
-    if (filters?.usuario) {
-      params = params.set('usuario', filters.usuario);
+    if (filters?.action_type) {
+      params = params.set('action_type', filters.action_type);
     }
 
     return this.http.get<AuditLog[]>(
